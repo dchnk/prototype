@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Canvas from './Canvas'
 import { Joystick } from 'react-joystick-component';
 
@@ -10,22 +10,35 @@ function App() {
   const [newPosition, setNewPosition] = useState({ x: 0, y: 0 })
 
   const [isMove, setIsMove] = useState(false);
-  const [isBorder, setIsBorder] = useState(false);
+  const [speed, setSpeed] = useState(.5)
 
-  const config = {
-    border: { top: 0, left: 0, right: 750, bottom: 750 }
-  }
+  // const config = {
+  //   border: { top: 0, left: 0, right: 750, bottom: 750 }
+  // }
 
 
   useEffect(() => {
 
-    if (position.x + newPosition.x > 0 && position.x + newPosition.x < 750 && position.y - newPosition.y > 0 && position.y - newPosition.y < 750) {
-      
+    if (position.x + newPosition.x < 0 || position.x + newPosition.x > 750) {
+
+      if (position.y - newPosition.y < 0 || position.y - newPosition.y > 750) {
+        return setPosition({ x: position.x, y: position.y })
+      }
+
+      return setPosition({ x: position.x, y: position.y - newPosition.y });
     }
-    
-    if (position.x + newPosition.x > 0 && position.x + newPosition.x < 750 && position.y - newPosition.y > 0 && position.y - newPosition.y < 750) {
-      
+
+
+    if (position.y - newPosition.y < 0 || position.y - newPosition.y > 750) {
+
+      if (position.x + newPosition.x < 0 || position.x + newPosition.x > 750) {
+        return setPosition({ x: position.x, y: position.y })
+      }
+
+      return setPosition({ x: position.x + newPosition.x, y: position.y });
     }
+
+
 
     setPosition({ x: position.x + newPosition.x, y: position.y - newPosition.y })
 
@@ -34,24 +47,46 @@ function App() {
   useEffect(() => {
 
     setTimeout(() => {
-      if (isMove && checkBorder()) {
+      if (isMove) {
+
+        if (position.x + newPosition.x < 0 || position.x + newPosition.x > 750) {
+
+          if (position.y - newPosition.y < 0 || position.y - newPosition.y > 750) {
+            return setPosition({ x: position.x, y: position.y })
+          }
+
+          return setPosition({ x: position.x, y: position.y - newPosition.y });
+        }
+
+
+        if (position.y - newPosition.y < 0 || position.y - newPosition.y > 750) {
+
+          if (position.x + newPosition.x < 0 || position.x + newPosition.x > 750) {
+            return setPosition({ x: position.x, y: position.y })
+          }
+
+          return setPosition({ x: position.x + newPosition.x, y: position.y });
+        }
+
+
+
         setPosition({ x: position.x + newPosition.x, y: position.y - newPosition.y })
       }
     }, 1)
   }, [position])
 
-  const checkBorder = () => {
-    if (position.x > 0 && position.x < 750 && position.y > 0 && position.y < 750) {
+  // const checkBorder = () => {
+  //   if (position.x > 0 && position.x < 750 && position.y > 0 && position.y < 750) {
 
-      return true;
-    }
+  //     return true;
+  //   }
 
-    return false;
-  }
+  //   return false;
+  // }
 
   const handleMove = (IJoystickUpdateEvent) => {
 
-    setNewPosition({ x: IJoystickUpdateEvent.x * .9, y: IJoystickUpdateEvent.y * .9 })
+    setNewPosition({ x: IJoystickUpdateEvent.x * speed, y: IJoystickUpdateEvent.y * speed })
 
   }
 
