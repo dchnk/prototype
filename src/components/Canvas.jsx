@@ -1,27 +1,57 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './styles/canvas.scss';
-// import CanvasMethods from './canvas-elements/canvas';
+import map from '../img/map.png'
+import cook from '../img/cook.png'
+
+let ctx, canvas, mapImg, cookImg;
+function loadImage(image, cors = true) {
+  return new Promise((resolve) => {
+  
+    if (!image) return resolve(null);
+
+    const img = new Image();
+
+    img.crossOrigin = cors ? 'use-credentials' : 'anonymous';
+    img.onload = () => resolve(img);
+    img.onerror = () => resolve(null);
+    img.src = image;
+  });
+}
+
+loadImage(map).then((res) => {
+
+  mapImg = res;
+
+})
+
+loadImage(cook).then((res) => {
+
+  cookImg = res;
+
+})
 
 function Canvas({ position }) {
   const canvasRef = useRef()
-  let ctx, canvas;
 
-  useEffect(() => {
+  useEffect(() => {  
     canvas = canvasRef.current;
     ctx = canvas.getContext("2d");
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }, [])
+
+  useEffect(() => {
+  
+    // ctx.clearRect(0, 0, canvas.width, canvas.height)
+    if (!mapImg && !cookImg) return;
+    ctx.drawImage(mapImg, 0, 0, canvas.width, canvas.height)
     drowHero()
   }, [position])
 
 
   const drowHero = (x = position.x, y = position.y) => {
-    ctx.fillStyle = 'red';
-    
-    ctx.beginPath();
-    ctx.rect(x, y, 50, 50);
-    ctx.closePath();
-    ctx.fill();
+    // ctx.beginPath();
+    ctx.drawImage(cookImg, x, y, 50, 50)
+    // ctx.closePath();
+    // ctx.fill();
   }
 
 
@@ -29,7 +59,7 @@ function Canvas({ position }) {
 
   return (
     <div className='container'>
-      <canvas className='canvas' ref={canvasRef}  width={800} height={800}/>
+      <canvas className='canvas' ref={canvasRef} width={800} height={800} />
     </div>
   )
 }

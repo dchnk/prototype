@@ -10,7 +10,7 @@ function App() {
   const [newPosition, setNewPosition] = useState({ x: 0, y: 0 })
 
   const [isMove, setIsMove] = useState(false);
-  const [speed, setSpeed] = useState(.5)
+  const [speed, setSpeed] = useState(.7);
 
   // const config = {
   //   border: { top: 0, left: 0, right: 750, bottom: 750 }
@@ -18,10 +18,20 @@ function App() {
 
 
   useEffect(() => {
+    checkBorder(position, newPosition);
+  }, [newPosition])
 
-    if (position.x + newPosition.x < 0 || position.x + newPosition.x > 750) {
+  useEffect(() => {
+    setTimeout(() => {
+      if (isMove) {
+        checkBorder(position, newPosition);
+      }
+    }, 1)
+  }, [position])
 
-      if (position.y - newPosition.y < 0 || position.y - newPosition.y > 750) {
+  const checkBorder = (position, newPosition) => {
+    if (position.x + newPosition.x < 70 || position.x + newPosition.x > 680) {
+      if (position.y - newPosition.y < 70 || position.y - newPosition.y > 680) {
         return setPosition({ x: position.x, y: position.y })
       }
 
@@ -29,65 +39,20 @@ function App() {
     }
 
 
-    if (position.y - newPosition.y < 0 || position.y - newPosition.y > 750) {
-
-      if (position.x + newPosition.x < 0 || position.x + newPosition.x > 750) {
+    if (position.y - newPosition.y < 70 || position.y - newPosition.y > 680) {
+      if (position.x + newPosition.x < 70 || position.x + newPosition.x > 680) {
         return setPosition({ x: position.x, y: position.y })
       }
 
       return setPosition({ x: position.x + newPosition.x, y: position.y });
     }
 
-
-
     setPosition({ x: position.x + newPosition.x, y: position.y - newPosition.y })
-
-  }, [newPosition])
-
-  useEffect(() => {
-
-    setTimeout(() => {
-      if (isMove) {
-
-        if (position.x + newPosition.x < 0 || position.x + newPosition.x > 750) {
-
-          if (position.y - newPosition.y < 0 || position.y - newPosition.y > 750) {
-            return setPosition({ x: position.x, y: position.y })
-          }
-
-          return setPosition({ x: position.x, y: position.y - newPosition.y });
-        }
-
-
-        if (position.y - newPosition.y < 0 || position.y - newPosition.y > 750) {
-
-          if (position.x + newPosition.x < 0 || position.x + newPosition.x > 750) {
-            return setPosition({ x: position.x, y: position.y })
-          }
-
-          return setPosition({ x: position.x + newPosition.x, y: position.y });
-        }
-
-
-
-        setPosition({ x: position.x + newPosition.x, y: position.y - newPosition.y })
-      }
-    }, 1)
-  }, [position])
-
-  // const checkBorder = () => {
-  //   if (position.x > 0 && position.x < 750 && position.y > 0 && position.y < 750) {
-
-  //     return true;
-  //   }
-
-  //   return false;
-  // }
+  }
 
   const handleMove = (IJoystickUpdateEvent) => {
-
+  console.log(IJoystickUpdateEvent)
     setNewPosition({ x: IJoystickUpdateEvent.x * speed, y: IJoystickUpdateEvent.y * speed })
-
   }
 
   const handleStart = () => {
@@ -102,7 +67,14 @@ function App() {
     <div className='main'>
       <div className='game'>
         <div className='joystick'>
-          <Joystick start={handleStart} move={handleMove} stop={handleStop} />
+          <Joystick
+            start={handleStart}
+            move={handleMove}
+            stop={handleStop}
+            size={80}
+            baseColor={'#d5d5d580'}
+            stickColor={'#000000b0'}
+          />
         </div>
         <Canvas position={position} />
       </div>

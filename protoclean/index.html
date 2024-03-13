@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <img src="../src/img/cook.png" alt="" id="cook" style="display: none;">
+  <img src="../src/img/map.png" alt="" id="map" style="display: none;">
+  <canvas class="canvas" width="800" height="800"></canvas>
+  
+  <div class="joystick">
+    <div class="stick"></div>
+  </div>
+  <script src="./script.js"></script>
+  
+  <style>
+  
+    .joystick {
+      position: absolute;
+      height: 100px;
+      width: 100px;
+      bottom: 25%;
+      right: 25%;
+      border-radius: 100%;
+      background-color: rgba(88, 88, 88, 0.219);
+    }
+    
+    .stick {
+      position: absolute;
+      height: 50px;
+      width: 50px;
+      bottom: 25px;
+      right: 25px;
+      border-radius: 100%;
+      background-color: rgba(19, 19, 19, 0.76);
+    }
+  </style>
+</body>
+</html>
