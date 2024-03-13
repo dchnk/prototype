@@ -1,22 +1,44 @@
-
-const canvas = document.querySelector('.canvas');
-
+let canvas = document.querySelector('.canvas');
 const ctx = canvas.getContext('2d');
 
 const stick = document.querySelector('.stick')
+const stickPos = stick.getBoundingClientRect();
 
 const joystick = document.querySelector('.joystick').getBoundingClientRect();
 
 let active = false;
 
+
+let eventStart = {}, currentMove = {};
+
 document.addEventListener('mousemove', (e) => {
   if (!active) return;
-  console.log(`Джостик: ${joystick.x}`)
-  console.log(`Клиент: ${e.clientX}`)
+  // console.log(joystick)
+  // console.log(e)
+  // console.log(eventStart)
+
+  currentMove.x = e.clientX - eventStart.x;
+  currentMove.y = eventStart.y - e.clientY;
+
+  console.log(stickPos.x)
+  console.log(stickPos.y)
+
+  console.log(currentMove.x)
+
+  stick.style.left = stickPos.x + currentMove.x;
+  // stick.style.top = stickPos.y + currentMove.y;
+
+  // console.log(stick.style.left)
+
+
+
+  // console.log(currentMove)
 })
 
 stick.addEventListener('mousedown', (e) => {
   console.log('Мышка нажата')
+  eventStart.x = e.clientX;
+  eventStart.y = e.clientY;
   active = true;
 })
 
