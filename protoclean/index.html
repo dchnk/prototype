@@ -11,7 +11,10 @@
   <canvas class="canvas" width="800" height="800"></canvas>
   
   <div class="joystick">
-    <div class="stick"></div>
+    <div class="joystick__content">
+      <div class="stick"></div>
+    </div>
+    
   </div>
   <script src="./script.js"></script>
   
@@ -27,12 +30,15 @@
       background-color: rgba(88, 88, 88, 0.219);
     }
     
+    .joystick__content {
+      position: relative;
+      height: 100%;
+    }
+    
     .stick {
       position: absolute;
       height: 50px;
       width: 50px;
-      bottom: 25px;
-      right: 25px;
       border-radius: 100%;
       background-color: rgba(19, 19, 19, 0.76);
     }

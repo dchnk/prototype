@@ -31,6 +31,8 @@ function App() {
 
   const checkBorder = (position, newPosition) => {
     if (position.x + newPosition.x < 70 || position.x + newPosition.x > 680) {
+    
+      console.log('first')
       if (position.y - newPosition.y < 70 || position.y - newPosition.y > 680) {
         return setPosition({ x: position.x, y: position.y })
       }
