@@ -114,7 +114,7 @@ class Joystick {
       this.stick.x = this.stick.cx + this.m.x;
       this.stick.y = this.stick.cy + this.m.y;
 
-      
+
       this.impuls.x = (this.stick.cx - this.stick.x) * -1 / this.r;
       this.impuls.y = (this.stick.cy - this.stick.y) / this.r;
 
@@ -173,15 +173,46 @@ class Map {
 
 class Cookie {
   constructor(config) {
-    this.x = 0;
-    this.y = 0;
     this.w = 30;
     this.h = 30;
-    this.bg = document.querySelector('#map');
+    this.cookies = [];
+
+    this.bg = document.querySelector('#cookie');
+
+    this.init();
   }
 
-  drow() {
-    ctx.drawImage(this.bg, this.x, this.y, this.w, this.h)
+  init() {
+    let currentSpawn = this.spawn();
+
+
+    this.cookies.push({x: currentSpawn.x, y: currentSpawn.y, status: 1})
+    setInterval(() => {
+
+      if (this.cookies.length >= 3) return;
+
+      currentSpawn = this.spawn();
+
+      this.cookies.push({x: currentSpawn.x, y: currentSpawn.y, status: 1})
+
+    }, 1000 * 10)
+  }
+
+  spawn() {
+
+    function getRandomArbitrary(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+
+    const y = getRandomArbitrary(75, 662);
+    const x = getRandomArbitrary(75, 685);
+
+    return { x, y };
+  }
+
+  drow(x = 100, y = 100) {
+    ctx.drawImage(this.bg, x, y, this.w, this.h)
   }
 }
 
@@ -192,7 +223,7 @@ class Hero {
     this.w = 27.5;
     this.h = 60;
     this.bg = document.querySelector('#cook');
-    this.speed = 1;
+    this.speed = 2;
   }
 
   drow() {
@@ -201,23 +232,23 @@ class Hero {
 
   moveCheched(impuls) {
     console.log(this.x, this.y)
-    
+
     let x = this.x + impuls.x * this.speed;
     let y = this.y - impuls.y * this.speed;
-    
+
     if (x < 70 || x > 690) {
       if (y < 70 || y > 667) {
         return;
       }
-      
+
       this.y = y;
       return;
     }
 
 
     if (y < 70 || y > 667) {
-    
-      if (x < 70 || x > 690) {      
+
+      if (x < 70 || x > 690) {
         return;
       }
 
@@ -232,44 +263,46 @@ class Hero {
 
 const map = new Map();
 const cook = new Hero();
+const cookie = new Cookie();
 const joystick = new Joystick();
 
-document.addEventListener('keydown', (e) => {
-  switch (e.code) {
-    case 'ArrowUp':
-      cook.move(0, -.5)
-    // break;
-
-    case 'ArrowLeft':
-      cook.move(-.5, 0)
-      break;
-
-    case 'ArrowRight':
-      cook.move(.5, 0)
-      break;
-
-    case 'ArrowDown':
-      cook.move(0, .5)
-      break;
-
-    default: break;
-  }
-})
-
-
-setInterval(() => {
-
-
-}, 1000 / 24)
 
 const animate = () => {
+
+  setTimeout(() => {
+    // каждый кадр вычисляем положение персонажа  
   if (joystick.active) {
     cook.moveCheched(joystick.impuls)
   }
+
+  // Очищаем поле и рисуем карту каждый новый кадр
   ctx.clearRect(0, 0, 800, 800)
-  map.drow();
+  map.drow();  
+
+  // Рисуем печеньки  
+  if (cookie.cookies.length > 0) {
+    let i, length = cookie.cookies.length, currentCookie;
+    for (i = 0; i < length; i++) {
+      
+      currentCookie = cookie.cookies[i]
+      if (currentCookie.status === 1) {
+        cookie.drow(currentCookie.x, currentCookie.y)
+      }
+
+      
+    }
+  }
+
+  // Рисуем персонажа
   cook.drow();
+
+
+
   requestAnimationFrame(animate)
+
+  }, 1000 / 144)
+
+  
 }
 
 requestAnimationFrame(animate)
