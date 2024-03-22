@@ -3,7 +3,6 @@
 let canvas = document.querySelector('.canvas');
 const ctx = canvas.getContext('2d');
 
-
 // document.addEventListener('mousemove', function (e) {
 
 //   const stick = document.querySelector('.stick');
@@ -176,26 +175,44 @@ class Cookie {
     this.w = 30;
     this.h = 30;
     this.cookies = [];
-
     this.bg = document.querySelector('#cookie');
-
     this.init();
   }
 
   init() {
+
     let currentSpawn = this.spawn();
+    this.cookies.push({ x: currentSpawn.x, y: currentSpawn.y, spawnTime: Date.now(), lifeTime: 5000 })
 
 
-    this.cookies.push({x: currentSpawn.x, y: currentSpawn.y, status: 1})
+
     setInterval(() => {
+      let i, length = this.cookies.length, status;
+      console.log(length)
+      
+      if (length === 0) return;
+      
+      for (i = 0; i < length; i++) {
+        status = this.checkLife(this.cookies[i])
 
-      if (this.cookies.length >= 3) return;
+        switch (status) {
+          case 1:
+            break;
 
-      currentSpawn = this.spawn();
+          case 0:
+            this.cookies = this.cookies.splice(i, 1);
+            break;
 
-      this.cookies.push({x: currentSpawn.x, y: currentSpawn.y, status: 1})
+          default: break;
+        }
+      }
+    }, 1000)
 
-    }, 1000 * 10)
+    setInterval(() => {
+      if (this.cookies.length === 3) return;
+      this.cookies.push({ x: currentSpawn.x, y: currentSpawn.y, spawnTime: Date.now(), lifeTime: 5000 })
+    }, 5000)
+
   }
 
   spawn() {
@@ -209,6 +226,14 @@ class Cookie {
     const x = getRandomArbitrary(75, 685);
 
     return { x, y };
+  }
+
+  checkLife(item) {
+    if (Date.now() - item.lifeTime < item.spawnTime) {
+      return 1;
+    }
+
+    return 0;
   }
 
   drow(x = 100, y = 100) {
@@ -267,42 +292,42 @@ const cookie = new Cookie();
 const joystick = new Joystick();
 
 
+let i, currentCookie;
+
 const animate = () => {
+  let length = cookie.cookies.length;
 
   setTimeout(() => {
     // каждый кадр вычисляем положение персонажа  
-  if (joystick.active) {
-    cook.moveCheched(joystick.impuls)
-  }
+    if (joystick.active) {
+      cook.moveCheched(joystick.impuls)
+    }
 
-  // Очищаем поле и рисуем карту каждый новый кадр
-  ctx.clearRect(0, 0, 800, 800)
-  map.drow();  
+    // Очищаем поле и рисуем карту каждый новый кадр
+    ctx.clearRect(0, 0, 800, 800)
+    map.drow();
 
-  // Рисуем печеньки  
-  if (cookie.cookies.length > 0) {
-    let i, length = cookie.cookies.length, currentCookie;
-    for (i = 0; i < length; i++) {
-      
-      currentCookie = cookie.cookies[i]
-      if (currentCookie.status === 1) {
+    // Рисуем печеньки
+
+    if (length > 0) {
+      console.log(length)
+
+      for (i = 0; i < length; i++) {
+        currentCookie = cookie.cookies[i]
         cookie.drow(currentCookie.x, currentCookie.y)
       }
-
-      
     }
-  }
 
-  // Рисуем персонажа
-  cook.drow();
-
+    // Рисуем персонажа
+    cook.drow();
 
 
-  requestAnimationFrame(animate)
+
+    requestAnimationFrame(animate)
 
   }, 1000 / 144)
 
-  
+
 }
 
 requestAnimationFrame(animate)
