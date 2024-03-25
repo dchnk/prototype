@@ -3,53 +3,6 @@
 let canvas = document.querySelector('.canvas');
 const ctx = canvas.getContext('2d');
 
-// document.addEventListener('mousemove', function (e) {
-
-//   const stick = document.querySelector('.stick');
-//   const stickPos = stick.getBoundingClientRect();
-//   const joystick = document.querySelector('.joystick').getBoundingClientRect();
-
-//   e.preventDefault();
-//   if (!active) return;
-
-//   currentMove.x = e.clientX - eventStart.x;
-//   currentMove.y = e.clientY - eventStart.y;
-
-//   let mag;
-//   let ax = stickPos.x - joystick.x - 25;
-//   let ay = stickPos.y - joystick.y - 25;
-
-
-//   mag = Math.sqrt(ax * ax + ay * ay);
-
-
-//   if (mag < 50) {
-//     stick.style.top = 25 + currentMove.y + 'px';
-//     stick.style.left = 25 + currentMove.x + 'px';
-//   } else {
-//     console.log(stick.style.top, stick.style.left)
-//     console.log(mag)
-//   }
-
-//   cook.moveCheched({ x: currentMove.x / 100, y: currentMove.y / 100 })
-
-// })
-
-// stick.addEventListener('mousedown', (e) => {
-//   console.log('Мышка нажата')
-//   eventStart.x = e.clientX;
-//   eventStart.y = e.clientY;
-//   active = true;
-// })
-
-// document.addEventListener('mouseup', (e) => {
-//   console.log('Мышка отпущена')
-//   stick.style.top = '25px';
-//   stick.style.left = '25px';
-//   active = false;
-// })
-
-
 class Joystick {
   constructor() {
     this.nodes = {
@@ -170,7 +123,7 @@ class Map {
   }
 }
 
-class Cookie {
+class Cookies {
   constructor(config) {
     this.w = 30;
     this.h = 30;
@@ -182,16 +135,14 @@ class Cookie {
   init() {
 
     let currentSpawn = this.spawn();
-    this.cookies.push({ x: currentSpawn.x, y: currentSpawn.y, spawnTime: Date.now(), lifeTime: 5000 })
-
-
+    this.cookies.push({ x: currentSpawn.x, y: currentSpawn.y, spawnTime: Date.now(), lifeTime: 5000, })
 
     setInterval(() => {
       let i, length = this.cookies.length, status;
       console.log(length)
-      
+
       if (length === 0) return;
-      
+
       for (i = 0; i < length; i++) {
         status = this.checkLife(this.cookies[i])
 
@@ -206,11 +157,12 @@ class Cookie {
           default: break;
         }
       }
-    }, 1000)
+    }, 1000 )
 
     setInterval(() => {
       if (this.cookies.length === 3) return;
       this.cookies.push({ x: currentSpawn.x, y: currentSpawn.y, spawnTime: Date.now(), lifeTime: 5000 })
+      console.log(this.cookies)
     }, 5000)
 
   }
@@ -221,7 +173,6 @@ class Cookie {
       return Math.random() * (max - min) + min;
     }
 
-
     const y = getRandomArbitrary(75, 662);
     const x = getRandomArbitrary(75, 685);
 
@@ -229,6 +180,8 @@ class Cookie {
   }
 
   checkLife(item) {
+    console.log(item)
+
     if (Date.now() - item.lifeTime < item.spawnTime) {
       return 1;
     }
@@ -288,9 +241,8 @@ class Hero {
 
 const map = new Map();
 const cook = new Hero();
-const cookie = new Cookie();
+const cookie = new Cookies();
 const joystick = new Joystick();
-
 
 let i, currentCookie;
 
