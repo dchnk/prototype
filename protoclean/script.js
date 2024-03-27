@@ -73,9 +73,6 @@ class Joystick {
 
       this.nodes.stick.style.top = this.stick.y + 'px';
       this.nodes.stick.style.left = this.stick.x + 'px';
-
-      // cook.moveCheched({ x: currentMove.x / 100, y: currentMove.y / 100 })
-
     })
 
     this.nodes.stick.addEventListener('mousedown', (e) => {
@@ -84,8 +81,6 @@ class Joystick {
       this.start.x = e.clientX;
       this.start.y = e.clientY;
       this.active = true;
-
-      console.log(this.active)
     })
 
     document.addEventListener('mouseup', (e) => {
@@ -108,13 +103,19 @@ class Joystick {
 
 }
 
+class Game {
+  constructor() {
+    this.time = 180000;
+    
+  }
+}
 
 class Map {
   constructor(config) {
-    this.x = 0;
-    this.y = 0;
-    this.w = 800;
-    this.h = 800;
+    this.x = -100;
+    this.y = -100;
+    this.w = 1200;
+    this.h = 1200;
     this.bg = document.querySelector('#map');
   }
 
@@ -123,76 +124,74 @@ class Map {
   }
 }
 
-class Cookies {
-  constructor(config) {
+class Cookie {
+  constructor(lifeTime = 15000) {
+    this.id = null;
     this.w = 30;
     this.h = 30;
-    this.cookies = [];
+    this.x = null;
+    this.y = null;
+    this.type = null;
+    this.lifeTime = lifeTime;
+    this.spawnTime = Date.now();
     this.bg = document.querySelector('#cookie');
     this.init();
   }
 
   init() {
-
     let currentSpawn = this.spawn();
-    this.cookies.push({ x: currentSpawn.x, y: currentSpawn.y, spawnTime: Date.now(), lifeTime: 5000, })
+    this.x = currentSpawn.x;
+    this.y = currentSpawn.y;
+    this.id = this.x + this.y + this.spawnTime;
 
-    setInterval(() => {
-      let i, length = this.cookies.length, status;
-      console.log(length)
+    setTimeout(() => {
+      if (!cookie.cookies[this.id]) return;
 
-      if (length === 0) return;
-
-      for (i = 0; i < length; i++) {
-        status = this.checkLife(this.cookies[i])
-
-        switch (status) {
-          case 1:
-            break;
-
-          case 0:
-            this.cookies = this.cookies.splice(i, 1);
-            break;
-
-          default: break;
-        }
-      }
-    }, 1000 )
-
-    setInterval(() => {
-      if (this.cookies.length === 3) return;
-      this.cookies.push({ x: currentSpawn.x, y: currentSpawn.y, spawnTime: Date.now(), lifeTime: 5000 })
-      console.log(this.cookies)
-    }, 5000)
-
+      delete cookie.cookies[this.id]
+    }, this.lifeTime)
+    
   }
 
   spawn() {
-
     function getRandomArbitrary(min, max) {
       return Math.random() * (max - min) + min;
     }
 
-    const y = getRandomArbitrary(75, 662);
-    const x = getRandomArbitrary(75, 685);
+    const y = getRandomArbitrary(175, 762);
+    const x = getRandomArbitrary(175, 785);
 
     return { x, y };
   }
+}
 
-  checkLife(item) {
-    console.log(item)
+class Cookies {
 
-    if (Date.now() - item.lifeTime < item.spawnTime) {
-      return 1;
-    }
-
-    return 0;
+  constructor(types = 5) {
+    this.cookies = {};
+    this.types = types;
+    this._init();
   }
 
-  drow(x = 100, y = 100) {
-    ctx.drawImage(this.bg, x, y, this.w, this.h)
+  _init() {
+    const cookie = new Cookie();
+    this.cookies[cookie.id] = cookie;
+
+    setInterval(() => {
+      if (Object.keys(this.cookies).length === 3) return;
+
+      const cookie = new Cookie();
+      this.cookies[cookie.id] = cookie;
+    }, 5000)
+
+  }
+
+
+  drow(bg, x, y, w, h) {
+    ctx.drawImage(bg, x, y, w, h)
   }
 }
+
+const cookie = new Cookies();
 
 class Hero {
   constructor(config) {
@@ -214,8 +213,8 @@ class Hero {
     let x = this.x + impuls.x * this.speed;
     let y = this.y - impuls.y * this.speed;
 
-    if (x < 70 || x > 690) {
-      if (y < 70 || y > 667) {
+    if (x < 170 || x > 790) {
+      if (y < 170 || y > 767) {
         return;
       }
 
@@ -224,9 +223,9 @@ class Hero {
     }
 
 
-    if (y < 70 || y > 667) {
+    if (y < 170 || y > 767) {
 
-      if (x < 70 || x > 690) {
+      if (x < 170 || x > 790) {
         return;
       }
 
@@ -241,32 +240,33 @@ class Hero {
 
 const map = new Map();
 const cook = new Hero();
-const cookie = new Cookies();
 const joystick = new Joystick();
 
 let i, currentCookie;
 
 const animate = () => {
-  let length = cookie.cookies.length;
+
+
+  let cookies = cookie.cookies;
+  let length = Object.keys(cookies).length;
 
   setTimeout(() => {
-    // каждый кадр вычисляем положение персонажа  
+    // каждый кадр вычисляем положение персонажа
     if (joystick.active) {
       cook.moveCheched(joystick.impuls)
     }
 
     // Очищаем поле и рисуем карту каждый новый кадр
-    ctx.clearRect(0, 0, 800, 800)
+    ctx.clearRect(0, 0, 1000, 1000)
     map.drow();
 
     // Рисуем печеньки
 
     if (length > 0) {
-      console.log(length)
 
-      for (i = 0; i < length; i++) {
-        currentCookie = cookie.cookies[i]
-        cookie.drow(currentCookie.x, currentCookie.y)
+      for (i in cookies) {
+        currentCookie = cookies[i]
+        cookie.drow(currentCookie.bg, currentCookie.x, currentCookie.y, currentCookie.w, currentCookie.h)
       }
     }
 
