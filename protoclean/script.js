@@ -79,6 +79,8 @@ class Game {
 
     // Рисуем персонажа
     this.hero.drow();
+    
+    if (this.pause) this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
 
     requestAnimationFrame(this.animate)
   }
