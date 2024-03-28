@@ -1,264 +1,71 @@
-
-
-let canvas = document.querySelector('.canvas');
-const ctx = canvas.getContext('2d');
-
-class Joystick {
-  constructor() {
-    this.nodes = {
-      joystick: document.querySelector('.joystick'),
-      stick: document.querySelector('.stick')
-    };
-    this.active = false;
-    this.x = 0;
-    this.y = 0;
-    this.w = 100;
-    this.h = 100;
-    this.r = this.w / 2;
-
-
-    this.stick = {
-      cx: 25,
-      cy: 25,
-      x: 25,
-      y: 25,
-      w: 50,
-      h: 50,
-      r: 25,
-    }
-
-    this.start = { x: 0, y: 0 };
-    this.m = { x: 0, y: 0 };
-    this.impuls = {
-      x: 0,
-      y: 0,
-    };
-
-    this.init()
-  }
-
-  init() {
-
-    this.nodes.stick.style.top = this.stick.y + 'px';
-    this.nodes.stick.style.left = this.stick.x + 'px';
-
-    document.addEventListener('mousemove', (e) => {
-      if (!this.active) return;
-      this.m.x = e.clientX - this.start.x;
-      this.m.y = e.clientY - this.start.y;
-
-      let mag = Math.sqrt(this.m.x * this.m.x + this.m.y * this.m.y);
-      if (mag >= this.r) {
-
-        this.stick.x = this.x + (this.m.x - this.x) / mag * this.r + this.stick.cx;
-        this.stick.y = this.y + (this.m.y - this.y) / mag * this.r + this.stick.cy;
-
-        this.impuls.x = (this.stick.cx - this.stick.x) * -1 / this.r;
-        this.impuls.y = (this.stick.cy - this.stick.y) / this.r;
-
-
-        this.nodes.stick.style.top = this.stick.y + 'px';
-        this.nodes.stick.style.left = this.stick.x + 'px';
-        return;
-      }
-
-
-      this.stick.x = this.stick.cx + this.m.x;
-      this.stick.y = this.stick.cy + this.m.y;
-
-
-      this.impuls.x = (this.stick.cx - this.stick.x) * -1 / this.r;
-      this.impuls.y = (this.stick.cy - this.stick.y) / this.r;
-
-
-      this.nodes.stick.style.top = this.stick.y + 'px';
-      this.nodes.stick.style.left = this.stick.x + 'px';
-    })
-
-    this.nodes.stick.addEventListener('mousedown', (e) => {
-      console.log('Мышка нажата')
-
-      this.start.x = e.clientX;
-      this.start.y = e.clientY;
-      this.active = true;
-    })
-
-    document.addEventListener('mouseup', (e) => {
-      console.log('Мышка отпущена')
-      this.stick.x = 25;
-      this.stick.y = 25;
-
-      this.nodes.stick.style.top = this.stick.y + 'px';
-      this.nodes.stick.style.left = this.stick.x + 'px';
-
-      this.impuls.x = 0;
-      this.impuls.y = 0;
-
-      this.active = false;
-
-      console.log(this.active)
-    })
-
-  }
-
-}
+import Joystick from "./modules/joystick.js";
+import Map from "./modules/map.js";
+import Hero from "./modules/hero.js";
+import Cookies from "./modules/cookies.js";
 
 class Game {
   constructor() {
-    this.time = 180000;
-    
-  }
-}
+    this.canvas = document.querySelector('.canvas');
+    this.ctx = this.canvas.getContext('2d');
 
-class Map {
-  constructor(config) {
-    this.x = -100;
-    this.y = -100;
-    this.w = 1200;
-    this.h = 1200;
-    this.bg = document.querySelector('#map');
-  }
-
-  drow() {
-    ctx.drawImage(this.bg, this.x, this.y, this.w, this.h)
-  }
-}
-
-class Cookie {
-  constructor(lifeTime = 15000) {
-    this.id = null;
-    this.w = 30;
-    this.h = 30;
-    this.x = null;
-    this.y = null;
-    this.type = null;
-    this.lifeTime = lifeTime;
-    this.spawnTime = Date.now();
-    this.bg = document.querySelector('#cookie');
-    this.init();
+    this.time = 30000;
+    this.pause = false;
+    this.levels = [
+      {level: 1, endTime: 20000, coockie: {pieces: 3, types: 5}},
+      {level: 2, endTime: 10000, coockie: {pieces: 4, types: 5}},
+      {level: 3, endTime: 0, coockie: {pieces: 5, types: 5}},
+    ];
+    this.level = null;
+    this.joystick = new Joystick();
+    this.map = new Map(this.ctx);
+    this.hero = new Hero(this.ctx);
+    this.cookies = new Cookies(5, this.ctx);
   }
 
   init() {
-    let currentSpawn = this.spawn();
-    this.x = currentSpawn.x;
-    this.y = currentSpawn.y;
-    this.id = this.x + this.y + this.spawnTime;
-
-    setTimeout(() => {
-      if (!cookie.cookies[this.id]) return;
-
-      delete cookie.cookies[this.id]
-    }, this.lifeTime)
-    
-  }
-
-  spawn() {
-    function getRandomArbitrary(min, max) {
-      return Math.random() * (max - min) + min;
-    }
-
-    const y = getRandomArbitrary(175, 762);
-    const x = getRandomArbitrary(175, 785);
-
-    return { x, y };
-  }
-}
-
-class Cookies {
-
-  constructor(types = 5) {
-    this.cookies = {};
-    this.types = types;
-    this._init();
-  }
-
-  _init() {
-    const cookie = new Cookie();
-    this.cookies[cookie.id] = cookie;
+    this.level = this.levels[0];
 
     setInterval(() => {
-      if (Object.keys(this.cookies).length === 3) return;
 
-      const cookie = new Cookie();
-      this.cookies[cookie.id] = cookie;
-    }, 5000)
+      this.time === 0 ? 0 : this.time -= 250;
 
-  }
+      if (this.time === 0) return;
 
-
-  drow(bg, x, y, w, h) {
-    ctx.drawImage(bg, x, y, w, h)
-  }
-}
-
-const cookie = new Cookies();
-
-class Hero {
-  constructor(config) {
-    this.x = 400;
-    this.y = 400;
-    this.w = 27.5;
-    this.h = 60;
-    this.bg = document.querySelector('#cook');
-    this.speed = 2;
-  }
-
-  drow() {
-    ctx.drawImage(this.bg, this.x, this.y, this.w, this.h)
-  }
-
-  moveCheched(impuls) {
-    console.log(this.x, this.y)
-
-    let x = this.x + impuls.x * this.speed;
-    let y = this.y - impuls.y * this.speed;
-
-    if (x < 170 || x > 790) {
-      if (y < 170 || y > 767) {
-        return;
+      this.checkLevel();
+      if (this.time % this.cookies.spawnTime === 0 && Object.keys(this.cookies.cookies).length < this.level.coockie.pieces) {
+        
+        // let type = Math.random() * this.level.cookie.types;
+        this.cookies.spawnCookie();
       }
+      
 
-      this.y = y;
-      return;
+    }, 250)
+
+    requestAnimationFrame(this.animate);
+  }
+
+  checkLevel() {
+    
+    if (this.time <= this.levels[this.level.level - 1].endTime ) {
+      this.level = this.levels[this.level.level];
     }
 
-
-    if (y < 170 || y > 767) {
-
-      if (x < 170 || x > 790) {
-        return;
-      }
-
-      this.x = x;
-      return;
-    }
-
-    this.x = x;
-    this.y = y;
+    console.log(this.level)
   }
-}
 
-const map = new Map();
-const cook = new Hero();
-const joystick = new Joystick();
+  animate = () => {
+    let i, currentCookie;
+    let cookies = this.cookies.cookies;
+    let length = Object.keys(cookies).length;
 
-let i, currentCookie;
-
-const animate = () => {
-
-
-  let cookies = cookie.cookies;
-  let length = Object.keys(cookies).length;
-
-  setTimeout(() => {
     // каждый кадр вычисляем положение персонажа
-    if (joystick.active) {
-      cook.moveCheched(joystick.impuls)
+    if (this.joystick.active) {
+      this.hero.moveCheched(this.joystick.impuls)
     }
 
     // Очищаем поле и рисуем карту каждый новый кадр
-    ctx.clearRect(0, 0, 1000, 1000)
-    map.drow();
+    this.ctx.clearRect(0, 0, 1000, 1000)
+    this.map.drow();
 
     // Рисуем печеньки
 
@@ -266,20 +73,15 @@ const animate = () => {
 
       for (i in cookies) {
         currentCookie = cookies[i]
-        cookie.drow(currentCookie.bg, currentCookie.x, currentCookie.y, currentCookie.w, currentCookie.h)
+        this.cookies.drow(currentCookie.bg, currentCookie.x, currentCookie.y, currentCookie.w, currentCookie.h)
       }
     }
 
     // Рисуем персонажа
-    cook.drow();
+    this.hero.drow();
 
-
-
-    requestAnimationFrame(animate)
-
-  }, 1000 / 144)
-
-
+    requestAnimationFrame(this.animate)
+  }
 }
 
-requestAnimationFrame(animate)
+new Game().init();
