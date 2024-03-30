@@ -16,9 +16,11 @@ export default class Cookie {
     function getRandomArbitrary(min, max) {
       return Math.random() * (max - min) + min;
     }
+    
+    const y = Math.round(getRandomArbitrary(175, 762));
+    const x = Math.round(getRandomArbitrary(175, 785));
 
-    const y = getRandomArbitrary(175, 762);
-    const x = getRandomArbitrary(175, 785);
+    console.log(y, x)
 
     return { x, y };
   }

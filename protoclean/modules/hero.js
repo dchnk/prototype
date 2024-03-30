@@ -1,10 +1,11 @@
 export default class Hero {
   constructor(ctx) {
     this.ctx = ctx;
-    this.x = 400;
-    this.y = 400;
+    this.x = 500;
+    this.y = 500;
     this.w = 27.5;
     this.h = 60;
+    this.cookiesRaised = {}
     this.bg = document.querySelector('#cook');
     this.speed = 2;
   }
