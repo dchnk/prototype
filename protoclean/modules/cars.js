@@ -6,8 +6,8 @@ export default class Cars {
     this.ctx = ctx;
     this.config = config;
     this.cars = {};
-    this.types = 0;
-    this.spawnTime = 0;
+    this.types = 1;
+    this.spawnTime = null;
     this._init();
   }
 
@@ -15,8 +15,31 @@ export default class Cars {
     this.spawnCar();
   }
 
-  spawnCar() {
-    const car = new Car();
+  spawnCar(type) {
+    function getRandomArbitrary(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+    
+    let randomType;
+    
+    
+    if (!type) randomType = Math.ceil(getRandomArbitrary(1, this.types));
+    
+    let randomSide = Math.round(getRandomArbitrary(1, 4));
+
+    let car = new Car(type ? type : randomType, this.config.lifeTime, randomSide);
+
+    let id, item;
+    for (id in this.cars) {
+      item = this.cars[id]
+      if (car.id === item.id) return;
+            
+      if (car.loadingX >= item.loadingX -item.loadingW - 10 && car.loadingX <= item.loadingX + item.loadingW + 10) {
+        this.spawnCar(randomType)
+        return;
+      }
+    }
+
     this.cars[car.id] = car;
   }
 
@@ -35,11 +58,15 @@ export default class Cars {
     delete this.cars[id]
   }
 
-  drow(bg, x, y, w, h) {
-    this.ctx.drawImage(bg, x, y, w, h)
+  drow(car, x, y, w, h, loading, loadingX, loadingY, loadingW, loadingH, cookieImg) {
+    this.ctx.drawImage(car, x, y, w, h)
+    this.ctx.drawImage(loading, loadingX, loadingY, loadingW, loadingH)
+    this.ctx.globalAlpha = .5;
+    this.ctx.drawImage(cookieImg, loadingX, loadingY, loadingW, loadingH)
+    this.ctx.globalAlpha = 1;
   }
 
-  updateConfig({spawnTime, types}) {
+  updateConfig({ spawnTime, types }) {
     this.spawnTime = spawnTime;
     this.types = types;
   }

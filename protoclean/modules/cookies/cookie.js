@@ -1,14 +1,14 @@
 export default class Cookie {
-  constructor(lifeTime = 15000) {
+  constructor(type, lifeTime) {
     this.id = null;
     this.w = 30;
     this.h = 30;
     this.x = null;
     this.y = null;
-    this.type = null;
+    this.type = type;
     this.lifeTime = lifeTime;
     this.spawnTime = Date.now();
-    this.bg = document.querySelector('#cookie');
+    this.bg = document.querySelector(`#cookie${this.type}`);
     this.init();
   }
 
@@ -19,8 +19,6 @@ export default class Cookie {
     
     const y = Math.round(getRandomArbitrary(175, 762));
     const x = Math.round(getRandomArbitrary(175, 785));
-
-    console.log(y, x)
 
     return { x, y };
   }

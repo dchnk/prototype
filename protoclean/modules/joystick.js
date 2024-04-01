@@ -71,7 +71,7 @@ export default class Joystick {
     })
 
     this.nodes.stick.addEventListener('mousedown', (e) => {
-      console.log('Мышка нажата')
+      // console.log('Мышка нажата')
 
       this.start.x = e.clientX;
       this.start.y = e.clientY;
@@ -79,7 +79,7 @@ export default class Joystick {
     })
 
     document.addEventListener('mouseup', (e) => {
-      console.log('Мышка отпущена')
+      // console.log('Мышка отпущена')
       this.stick.x = 25;
       this.stick.y = 25;
 
@@ -91,7 +91,7 @@ export default class Joystick {
 
       this.active = false;
 
-      console.log(this.active)
+      // console.log(this.active)
     })
 
   }

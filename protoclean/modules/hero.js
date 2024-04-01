@@ -5,6 +5,7 @@ export default class Hero {
     this.y = 500;
     this.w = 27.5;
     this.h = 60;
+    this.maxCookies = 2;
     this.cookiesRaised = {}
     this.bg = document.querySelector('#cook');
     this.speed = 2;
@@ -13,9 +14,17 @@ export default class Hero {
   drow() {
     this.ctx.drawImage(this.bg, this.x, this.y, this.w, this.h)
   }
+  
+  raiseCookie(id, type) {    
+    this.cookiesRaised[id] = {id, type}
+  }
+  
+  deleteRaisedCookie(id) {
+     delete this.cookiesRaised[id];
+  }
 
   moveCheched(impuls) {
-    console.log(this.x, this.y)
+    // console.log(this.x, this.y)
 
     let x = this.x + impuls.x * this.speed;
     let y = this.y - impuls.y * this.speed;
