@@ -10,13 +10,14 @@ class Game {
     this.ctx = this.canvas.getContext('2d');
 
     this.time = 60000;
-    this.pause = false;
+    this.timerNode = document.querySelector('.timer-num');
+    this.pause = true;
     this.levels = [
       {
         level: 0,
         endTime: 0,
-        cookie: { pieces: 10, types: 2, spawnTime: 3000, lifeTime: 60000 },
-        car: { pieces: 5, types: 2, spawnTime: 10000, lifeTime: 60000 },
+        cookie: { pieces: 20, types: 5, spawnTime: 2000, lifeTime: 10000 },
+        car: { pieces: 5, types: 5, spawnTime: 5000, lifeTime: 20000 },
       },
       // {
       //   level: 1,
@@ -33,6 +34,7 @@ class Game {
     ];
     this.level = null;
     this.score = 0;
+    this.scoreNode = document.querySelector('.score-num');
     this.joystick = new Joystick();
     this.map = new Map(this.ctx);
     this.hero = new Hero(this.ctx);
@@ -43,9 +45,21 @@ class Game {
   init() {
     this.level = this.levels[0];
     this.updateConfigs();
+    this.joystick.nodes.joystick.addEventListener('click', () => {
+      if (!this.pause) this.pause = false;
+    })
 
+    document.querySelector('#start').addEventListener('click', () => {
+      document.querySelector('.startMenu').classList.remove('popup_active');
+      this.pause = false;
+    })
+    
     const gameTimer = setInterval(() => {
+      if (this.pause) return;
       this.time <= 0 ? 0 : this.time -= 10;
+      if (this.time % 1000 === 0) {
+        this.timerNode.textContent = this.time / 1000;
+      }
 
       // каждый кадр вычисляем положение персонажа
       if (this.joystick.active) {
@@ -63,8 +77,6 @@ class Game {
       this.checkSpawn();
 
     }, 10)
-
-
 
     requestAnimationFrame(this.animate);
   }
@@ -108,40 +120,43 @@ class Game {
       if (this.hero.x >= cookie.x - cookie.w - 5 && this.hero.x <= cookie.x + cookie.w + 5) {
         if (this.hero.y >= cookie.y - 50 && this.hero.y <= cookie.y + cookie.h + 10) {
           this.hero.raiseCookie(cookie.id, cookie.type);
-          console.log(this.hero.cookiesRaised);
           this.cookies.deleteCookie(cookie.id);
         }
       }
     }
   }
-  
+
   checkPutCookie() {
     let carID, car;
     for (carID in this.cars.cars) {
       car = this.cars.cars[carID];
       if (this.hero.x >= car.loadingX - this.hero.w - 5 && this.hero.x <= car.loadingX + car.loadingW + 5) {
-        if (this.hero.y >= car.loadingY - 50 && this.hero.y <= car.loadingY  + car.loadingW + 10) {
-        
+        if (this.hero.y >= car.loadingY - 50 && this.hero.y <= car.loadingY + car.loadingW + 10) {
           let cookieID, cookie;
           for (cookieID in this.hero.cookiesRaised) {
             cookie = this.hero.cookiesRaised[cookieID];
-            if (cookie.type == car.type) {
+            if (cookie.type == car.type && car.places !== car.maxPlaces) {
               car.incresePlaces();
-              
-              switch(cookie.type) {
-                case 1: this.increseSroce(1);
-                console.log(`Ваш счет ${this.score}`)
-                break;
-                
-                case 2: this.increseSroce(2);
-                console.log(`Ваш счет ${this.score}`)
-                break;
-                
+
+              switch (cookie.type) {
+                case 1: this.increseScore(1);
+                  this.scoreNode.textContent = this.score;
+                  break;
+
+                case 2: this.increseScore(2);
+                  this.scoreNode.textContent = this.score;
+                  break;
+
                 default: break;
               }
-              
-              if (car.places === 2) {
-                delete this.cars.cars[carID];
+
+              if (car.places === car.maxPlaces) {
+                car.isEnd = true;
+                const timeout = setTimeout(() => {
+                  this.cars.deleteCar(car.id);
+                  clearTimeout(timeout);
+                }, 2000)
+                
               }
               this.hero.deleteRaisedCookie(cookieID)
             }
@@ -153,14 +168,14 @@ class Game {
       }
     }
   }
- 
+
   updateConfigs() {
     this.cookies.updateConfig(this.level.cookie);
     this.cars.updateConfig(this.level.car);
   }
   
-  increseSroce(num) {
-    this.score = this.score + num;
+  increseScore(num) {
+    this.score += num;
   }
 
   animate = () => {
@@ -172,6 +187,8 @@ class Game {
     // Очищаем поле и рисуем карту каждый новый кадр
     this.ctx.clearRect(0, 0, 1000, 1000);
     this.map.drow();
+    
+    if (this.pause) return requestAnimationFrame(this.animate);
 
     // Рисуем машинки
 
@@ -180,7 +197,12 @@ class Game {
 
       for (carID in cars) {
         let currentCar = cars[carID];
-        this.cars.drow(currentCar.bg, currentCar.x, currentCar.y, currentCar.w, currentCar.h, currentCar.loading, currentCar.loadingX, currentCar.loadingY, currentCar.loadingW, currentCar.loadingH, currentCar.cookieImg);
+        if (currentCar.isStart || currentCar.isEnd) {
+          this.cars.drowMoving(currentCar);
+        } else {
+          this.cars.drow(currentCar);          
+        }
+
       }
     }
 
@@ -195,12 +217,8 @@ class Game {
       }
     }
 
-
-
     // Рисуем персонажа
     this.hero.drow();
-
-    if (this.pause) this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     requestAnimationFrame(this.animate);
   }

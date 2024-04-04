@@ -7,20 +7,77 @@ export default class Hero {
     this.h = 60;
     this.maxCookies = 2;
     this.cookiesRaised = {}
+    this.leftHand = null;
+    this.rightHand = null;
     this.bg = document.querySelector('#cook');
     this.speed = 2;
+    this.interfaceNodes = {
+      slot1: document.querySelector('.slot-1'),
+      slot2: document.querySelector('.slot-2'),
+    }
   }
 
   drow() {
     this.ctx.drawImage(this.bg, this.x, this.y, this.w, this.h)
+    if (Object.keys(this.cookiesRaised).length > 0) {
+
+      if (this.leftHand?.type) {
+        this.ctx.drawImage(document.querySelector(`#cookie${this.leftHand?.type}`), this.x - 10, this.y + 30, 15, 15)
+      }
+
+      if (this.rightHand?.type) {
+        this.ctx.drawImage(document.querySelector(`#cookie${this.rightHand?.type}`), this.x + this.w - 5, this.y + 30, 15, 15)
+      }
+
+    }
   }
-  
-  raiseCookie(id, type) {    
-    this.cookiesRaised[id] = {id, type}
+
+  handleClickActiveCookie = (event) => {
+    const slot = event.target.id;
+    switch (slot) {
+      case 'leftHand':
+        this.deleteRaisedCookie(this.leftHand.id)
+        break;
+
+      case 'rightHand':
+        this.deleteRaisedCookie(this.rightHand.id)
+        break;
+
+      default: break;
+    }
   }
-  
+
+  raiseCookie(id, type) {
+    this.cookiesRaised[id] = { id, type };
+    if (!this.leftHand) {
+      this.leftHand = this.cookiesRaised[id];
+      this.interfaceNodes.slot1.addEventListener('click', this.handleClickActiveCookie)
+      this.interfaceNodes.slot1.classList.add('slot_active');
+      this.interfaceNodes.slot1.style.backgroundImage = `url("../../img/cookie/${type}.png")`;
+    } else {
+      this.rightHand = this.cookiesRaised[id];
+      this.interfaceNodes.slot2.addEventListener('click', this.handleClickActiveCookie)
+      this.interfaceNodes.slot2.classList.add('slot_active');
+      this.interfaceNodes.slot2.style.backgroundImage = `url("../../img/cookie/${type}.png")`;
+    }
+  }
+
   deleteRaisedCookie(id) {
-     delete this.cookiesRaised[id];
+    delete this.cookiesRaised[id];
+    if (this.leftHand?.id == id) {
+      this.interfaceNodes.slot1.removeEventListener('click', this.handleClickActiveCookie)
+      this.interfaceNodes.slot1.classList.remove('slot_active');
+      this.interfaceNodes.slot1.style.backgroundImage = null;
+      this.leftHand = null;
+      return;
+    }
+    if (this.rightHand?.id == id) {
+      this.interfaceNodes.slot2.removeEventListener('click', this.handleClickActiveCookie)
+      this.interfaceNodes.slot2.classList.remove('slot_active');
+      this.interfaceNodes.slot2.style.backgroundImage = null;
+      this.rightHand = null;
+      return;
+    }
   }
 
   moveCheched(impuls) {

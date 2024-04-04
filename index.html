@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 </head>
+
 <body>
   <img src="img/cook.png" alt="" id="cook" style="display: none;">
   <img src="img/cookie/1.png" alt="" id="cookie1" style="display: none;">
@@ -19,33 +21,167 @@
   <img src="img/car/right.png" alt="" id="car-right" style="display: none;">
   <img src="img/car/loading.png" alt="" id="loading" style="display: none;">
   <img src="img/car/loading-vert.png" alt="" id="loading-vert" style="display: none;">
-  <canvas class="canvas" width="1000" height="1000"></canvas>
-  
-  <div class="joystick">
-    <div class="joystick__content">
-      <div class="stick"></div>
+  <div class="container">
+    <canvas class="canvas" width="1000" height="1000"></canvas>
+    <div class="interface">
+      <div class="score">Счет: <span class="score-num">0</span></div>
+      <div class="timer">Таймер: <span class="timer-num">60</span></div>
+      <div class="inventary">
+        <span class="text">Нажми на печеньку, чтобы удалить</span>
+        <div class="slots">
+          <div class="slot slot-1" id="leftHand"></div>
+          <div class="slot slot-2" id="rightHand"></div>
+        </div>
+      </div>
     </div>
-    
+    <div class="joystick">
+      <div class="joystick__content">
+        <div class="stick"></div>
+      </div>
+    </div>
+    <div class="popup startMenu popup_active">
+      <div class="menu_select" id="start">Начать игру</div>
+      <div class="description">
+        А теперь запомни. Ты теперь пекарь! Ты теперь с пекарни, а кругом печеньки! Собирай их, когда они появляются и неси к нужной машине, чтобы получить очки. Бери за раз как можно больше, но не все сразу, руки то всего ДВЕ, если взял не ту печеньку тыкни на нее, чтобы выбросить. 
+      </div>
+    </div>
+    <div class="popup pauseMenu">
+      <div class="menu_select" id="back">Вернуться в игру</div>
+    </div>
+    <div class="popup endMenu">
+      <div class="text-end">Время вышло, игра окончена</div>
+      <div class="menu_select">Ваш счет: <span class="score-num"></span></div>
+      
+      <!-- <div class="menu_select" id="restart">Начать заново</div> -->
+    </div>
   </div>
+
+
   <script type="module" src="script.js"></script>
-  
+
   <style>
-  
+    .container {
+      position: relative;
+      max-width: 1000px;
+    }
+    
+    .popup {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: none;
+    }
+    
+    .menu_select {
+      color: white;
+      font-size: 50px;
+      cursor: pointer;      
+      border-bottom: 3px solid white;
+    }
+    
+    .menu_select:hover {
+      width: max-content;
+      font-size: 55px;
+    }
+    
+    .popup_active {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(58, 10, 59, 0.788);
+    }
+    
+    .description {
+      font-size: 20px;
+      color: white;
+      margin-top: 50px;
+      text-align: center;
+      max-width: 50%;
+    }
+
+    .interface {
+      position: absolute;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 10px;
+      box-sizing: border-box;
+      top: 0;
+      width: 100%;
+      height: 13%;
+      background-color: rgba(3, 3, 3, 0.397);
+      font-size: 50px;
+      color: white;
+    }
+
+    .score {
+      user-select: none;
+    }
+
+    .timer {
+      color: white;
+      user-select: none;
+    }
+
+    .inventary {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      width: 200px;
+    }
+
+    .text {
+      width: 100%;
+      bottom: -30px;
+      font-size: 13px;
+      margin-bottom: 10px;
+      user-select: none;
+    }
+
+    .slots {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .slot {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: rgba(192, 192, 192, 0.315);
+      margin-right: 20px;
+      user-select: none;
+    }
+    
+    .slot_active {
+      background-color: transparent;
+      border-radius: 0;
+      background-repeat: no-repeat;
+      background-size: contain;
+      transition: tansform .3s ease-in-out;
+    }
+    
+    .slot:last-child {
+      margin-right: 0;
+    }
+
     .joystick {
       position: absolute;
       height: 100px;
       width: 100px;
-      bottom: 25%;
-      right: 25%;
+      bottom: 5%;
+      right: 5%;
       border-radius: 100%;
       background-color: rgba(255, 216, 98, 0.555);
     }
-    
+
     .joystick__content {
       position: relative;
       height: 100%;
     }
-    
+
     .stick {
       position: absolute;
       height: 50px;
@@ -55,4 +191,5 @@
     }
   </style>
 </body>
+
 </html>
