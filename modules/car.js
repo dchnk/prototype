@@ -5,8 +5,8 @@ export default class Car {
     this.h = null;
     this.x = null;
     this.y = null;
-    this.isStart = null;
-    this.isEnd = null;
+    this.isStart = false;
+    this.isEnd = false;
     this.firstX = null;
     this.firstY = null;
     this.type = type;
@@ -34,9 +34,9 @@ export default class Car {
       return Math.random() * (max - min) + min;
     }
 
-    // const side = Math.round(getRandomArbitrary(1, 4));
     let x, y, bg;
     switch (this.side) {
+      
 
       // top
       case 1:

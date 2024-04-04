@@ -34,7 +34,8 @@ export default class Cars {
       item = this.cars[id]
       if (car.id === item.id) return;
 
-      if (car.loadingX >= item.loadingX - item.loadingW - 10 && car.loadingX <= item.loadingX + item.loadingW + 10) {
+      if (car.loadingX >= item.loadingX - item.loadingW - 10 && car.loadingX <= item.loadingX + item.loadingW + 10
+        && car.loadingY >= item.loadingY - car.loadingH - 10 && car.loadingY <= item.loadingY + item.loadingY + 10) {
         this.spawnCar(randomType)
         return;
       }
@@ -43,23 +44,36 @@ export default class Cars {
     this.cars[car.id] = car;
   }
 
-  checkLife() {
+  checkLifee() {
     let id, car;
     for (id in this.cars) {
 
       car = this.cars[id]
       if (Date.now() - car.spawnTime >= car.lifeTime) {
         car.isEnd = true;
-        setTimeout(() => {
-          delete this.cars[id];
-        }, 3000)
+        this.deleteCar(id)
+      }
+    }
+  }
+
+  checkLife() {
+    let id, car;
+    for (id in this.cars) {
+
+      car = this.cars[id]
+      if (car.lifeTime === 3000) {
+        car.isEnd = true;
+        this.deleteCar(id)
       }
     }
   }
 
   deleteCar(id) {
     if (!this.cars[id]) return;
-    delete this.cars[id]
+
+    setTimeout(() => {
+      delete this.cars[id];
+    }, 3000)
   }
 
   drowMoving(car) {

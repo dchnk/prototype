@@ -15,12 +15,12 @@ export default class Cookies {
     this.spawnCookie();
   }
 
-  spawnCookie(type) {
+  spawnCookie(type, x, y, droped) {
     function getRandomArbitrary(min, max) {
       return Math.random() * (max - min) + min;
     }
     let randomType = Math.round(getRandomArbitrary(1, this.types));
-    const cookie = new Cookie(type ? type : randomType, this.config.lifeTime);
+    const cookie = new Cookie(x ? x : null, y ? y: null, type ? type : randomType, this.config.lifeTime, droped);
     
     this.cookies[cookie.id] = cookie;
   }
@@ -30,7 +30,7 @@ export default class Cookies {
     for (id in this.cookies) {
 
       cookie = this.cookies[id];
-      if (Date.now() - cookie.spawnTime >= cookie.lifeTime) this.deleteCookie(id);
+      if (cookie.lifeTime === 0) this.deleteCookie(id);
     }
   }
 
@@ -40,8 +40,22 @@ export default class Cookies {
     delete this.cookies[id];
   }  
 
-  drow(bg, x, y, w, h) {
-    this.ctx.drawImage(bg, x, y, w, h);
+  drow(cookie) {
+    if (cookie.droped) {
+      this.ctx.globalAlpha = 0.3;
+      this.ctx.drawImage(cookie.bg, cookie.x, cookie.y, cookie.w, cookie.h);
+      this.ctx.globalAlpha = 1;
+      return;
+    }
+
+    if (cookie.hidding) {
+      this.ctx.globalAlpha = 1 / (3000 / cookie.lifeTime);
+      this.ctx.drawImage(cookie.bg, cookie.x, cookie.y, cookie.w, cookie.h);
+      this.ctx.globalAlpha = 1;
+      return;
+    }
+    
+    this.ctx.drawImage(cookie.bg, cookie.x, cookie.y, cookie.w, cookie.h);
   };
 
   updateConfig({spawnTime, types}) {
