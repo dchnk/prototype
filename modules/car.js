@@ -18,7 +18,7 @@ export default class Car {
     this.places = 0;
     this.maxPlaces = 4;
     this.bg = null;
-    this.cookieImg = document.querySelector(`#cookie${type}`)
+    this.cookieImg = document.querySelector(`#cookie-${type}`)
     this.loading = null;
     this.loadingW = 70;
     this.loadingH = 70;

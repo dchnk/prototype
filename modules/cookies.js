@@ -1,7 +1,8 @@
 import Cookie from "./cookies/cookie.js";
+import GoldCookie from "./cookies/gold-cookie.js";
+
 
 export default class Cookies {
-
   constructor(ctx, config) {
     this.ctx = ctx;
     this.config = config;
@@ -19,9 +20,16 @@ export default class Cookies {
     function getRandomArbitrary(min, max) {
       return Math.random() * (max - min) + min;
     }
+
+    if (type === 'gold') {
+      const gold = new GoldCookie();
+      this.cookies[gold.id] = gold;
+      return;
+    }
+
     let randomType = Math.round(getRandomArbitrary(1, this.types));
-    const cookie = new Cookie(x ? x : null, y ? y: null, type ? type : randomType, this.config.lifeTime, droped);
-    
+
+    const cookie = new Cookie(x ? x : null, y ? y : null, type ? type : randomType, this.config.lifeTime, droped);
     this.cookies[cookie.id] = cookie;
   }
 
@@ -38,11 +46,11 @@ export default class Cookies {
     if (!this.cookies[id]) return;
 
     delete this.cookies[id];
-  }  
+  }
 
   drow(cookie) {
     if (cookie.droped) {
-      this.ctx.globalAlpha = 0.3;
+      this.ctx.globalAlpha = 0.5;
       this.ctx.drawImage(cookie.bg, cookie.x, cookie.y, cookie.w, cookie.h);
       this.ctx.globalAlpha = 1;
       return;
@@ -54,11 +62,11 @@ export default class Cookies {
       this.ctx.globalAlpha = 1;
       return;
     }
-    
+
     this.ctx.drawImage(cookie.bg, cookie.x, cookie.y, cookie.w, cookie.h);
   };
 
-  updateConfig({spawnTime, types}) {
+  updateConfig({ spawnTime, types }) {
     this.spawnTime = spawnTime;
     this.types = types;
   };

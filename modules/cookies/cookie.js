@@ -10,7 +10,7 @@ export default class Cookie {
     this.type = type;
     this.lifeTime = lifeTime;
     this.spawnTime = Date.now();
-    this.bg = document.querySelector(`#cookie${this.type}`);
+    this.bg = document.querySelector(`#cookie-${this.type}`);
     this.init();
   }
 
@@ -31,19 +31,19 @@ export default class Cookie {
   }
 
   init() {
-    if (this.droped) {
-      setTimeout(() => {
-        this.droped = false;
-      }, 5000)
-    }
+    let currentSpawn = this.spawn();
+    this.x = currentSpawn.x;
+    this.y = currentSpawn.y;
+    this.id = this.x + this.y + this.spawnTime;
 
     setTimeout(() => {
       this.hidding = true;
     }, this.lifeTime - 3000)
 
-    let currentSpawn = this.spawn();
-    this.x = currentSpawn.x;
-    this.y = currentSpawn.y;
-    this.id = this.x + this.y + this.spawnTime;
+    if (this.droped) {
+      setTimeout(() => {
+        this.droped = false;
+      }, 5000)
+    }
   }
 }

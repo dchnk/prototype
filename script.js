@@ -15,16 +15,16 @@ class Game {
     this.levels = [
       {
         level: 0,
-        endTime: 0,
-        cookie: { pieces: 30, types: 5, spawnTime: 1500, lifeTime: 10000 },
-        car: { pieces: 12, types: 5, spawnTime: 3000, lifeTime: 20000 },
+        endTime: 100000,
+        cookie: { pieces: 6, types: 2, spawnTime: 1500, lifeTime: 20000 },
+        car: { pieces: 3, types: 2, spawnTime: 3000, lifeTime: 20000 },
       },
-      // {
-      //   level: 1,
-      //   endTime: 40000,
-      //   cookie: { pieces: 4, types: 1, spawnTime: 2000, lifeTime: 5000 },
-      //   car: { pieces: 1, types: 1, spawnTime: 3000, lifeTime: 10000 },
-      // },
+      {
+        level: 1,
+        endTime: 40000,
+        cookie: { pieces: 12, types: 3, spawnTime: 1500, lifeTime: 15000 },
+        car: { pieces: 6, types: 3, spawnTime: 3000, lifeTime: 15000 },
+      },
       // {
       //   level: 2,
       //   endTime: 0,
@@ -40,11 +40,34 @@ class Game {
     this.hero = new Hero(this.ctx);
     this.cookies = new Cookies(this.ctx, this.levels[0].cookie);
     this.cars = new Cars(this.ctx, this.levels[0].car);
+    this.interfaceNodes = {
+      slot1: document.querySelector('.slot-1'),
+      slot2: document.querySelector('.slot-2'),
+    }
   }
 
   init() {
     this.level = this.levels[0];
     this.updateConfigs();
+
+    this.interfaceNodes.slot1.addEventListener('click', () => {
+      if (this.hero.boosters?.gold) {
+        this.hero.deleteRaisedCookie();
+        return;
+      }
+
+      if (!this.hero.leftHand.type) return;
+
+      this.cookies.spawnCookie(this.hero.leftHand.type, this.hero.x, this.hero.y + this.hero.h / 2, true);
+      this.hero.deleteRaisedCookie(this.hero.leftHand.id);
+    })
+
+    this.interfaceNodes.slot2.addEventListener('click', () => {
+      if (!this.hero.rightHand.type) return;
+
+      this.cookies.spawnCookie(this.hero.rightHand.type, this.hero.x, this.hero.y + this.hero.h / 2, true);
+      this.hero.deleteRaisedCookie(this.hero.rightHand.id);
+    })
 
     this.canvas.addEventListener('mousedown', (evt) => {
       if (Object.keys(this.hero.cookiesRaised).length === 0) return;
@@ -54,16 +77,7 @@ class Game {
 
       if (x >= this.hero.x - 15 && x <= this.hero.x + this.hero.w + 20
         && y >= this.hero.y - 10 && y <= this.hero.y + this.hero.h + 10) {
-        if (this.hero.leftHand) {
-          this.cookies.spawnCookie(this.hero.leftHand.type, this.hero.x, this.hero.y + this.hero.h / 2, true);
-          this.hero.deleteRaisedCookie(this.hero.leftHand.id);
-          return;
-        }
-
-        if (this.hero.rightHand) {
-          this.cookies.spawnCookie(this.hero.rightHand.type, this.hero.x, this.hero.y + this.hero.h / 2, true);
-          this.hero.deleteRaisedCookie(this.hero.rightHand.id);
-        }
+        this.handleDropCookie();
       }
     })
     this.joystick.nodes.joystick.addEventListener('click', () => {
@@ -77,9 +91,15 @@ class Game {
 
     const gameTimer = setInterval(() => {
       if (this.pause) return;
+
       this.time <= 0 ? 0 : this.time -= 10;
+
       if (this.time % 1000 === 0) {
         this.timerNode.textContent = this.time / 1000;
+      }
+
+      if (this.time ===  119000) {
+        this.cookies.spawnCookie('gold');
       }
 
       if (this.time === 0) {
@@ -87,7 +107,17 @@ class Game {
         return console.log('gameover');
       };
 
+      // каждый кадр вычисляем положение персонажа
+      if (this.joystick.active) {
+        this.hero.moveCheched(this.joystick.impuls);
+      }
+
       if (this.time % 100 === 0) {
+        this.checkLevel();
+        this.checkSpawn();
+        this.checkGetCookie();
+        this.checkPutCookie();
+
         let carID;
         for (carID in this.cars.cars) {
           this.cars.cars[carID].lifeTime -= 100;
@@ -102,20 +132,26 @@ class Game {
           cookie.lifeTime -= 100;
         }
 
-        this.checkLevel();
-        this.checkSpawn();
       }
 
-      // каждый кадр вычисляем положение персонажа
-      if (this.joystick.active) {
-        this.hero.moveCheched(this.joystick.impuls);
-        this.checkGetCookie();
-        this.checkPutCookie();
-      }
+
 
     }, 10)
 
     requestAnimationFrame(this.animate);
+  }
+
+  handleDropCookie() {
+    if (this.hero.leftHand) {
+      this.cookies.spawnCookie(this.hero.leftHand.type, this.hero.x, this.hero.y + this.hero.h / 2, true);
+      this.hero.deleteRaisedCookie(this.hero.leftHand.id);
+      return;
+    }
+
+    if (this.hero.rightHand) {
+      this.cookies.spawnCookie(this.hero.rightHand.type, this.hero.x, this.hero.y + this.hero.h / 2, true);
+      this.hero.deleteRaisedCookie(this.hero.rightHand.id);
+    }
   }
 
   checkSpawn() {
@@ -149,16 +185,20 @@ class Game {
   }
 
   checkGetCookie() {
+    if (this.hero.boosters?.gold) return;
+    
     if (Object.keys(this.hero.cookiesRaised).length === this.hero.maxCookies) return;
 
     let i;
     for (i in this.cookies.cookies) {
       let cookie = this.cookies.cookies[i];
       if (cookie.droped) return;
+      
       if (this.hero.x >= cookie.x - cookie.w - 5 && this.hero.x <= cookie.x + cookie.w + 5) {
         if (this.hero.y >= cookie.y - 50 && this.hero.y <= cookie.y + cookie.h + 10) {
           this.hero.raiseCookie(cookie.id, cookie.type);
           this.cookies.deleteCookie(cookie.id);
+          continue;
         }
       }
     }
@@ -173,6 +213,18 @@ class Game {
         if (this.hero.y >= car.loadingY - 50 && this.hero.y <= car.loadingY + car.loadingW + 10) {
           if (car.isStart || car.isEnd) return;
           let cookieID, cookie;
+
+          if (this.hero.boosters?.gold) {
+            this.increseScore(15);
+            this.scoreNode.textContent = this.score;
+            
+            
+            car.isEnd = true;
+            this.cars.deleteCar(car.id);
+            this.hero.deleteRaisedCookie();
+            return;
+          }
+
           for (cookieID in this.hero.cookiesRaised) {
             cookie = this.hero.cookiesRaised[cookieID];
             if (cookie.type == car.type && car.places !== car.maxPlaces) {

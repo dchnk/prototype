@@ -11,22 +11,30 @@ export default class Hero {
     this.rightHand = null;
     this.bg = document.querySelector('#cook');
     this.speed = 2;
+    this.boosters = {};
     this.interfaceNodes = {
       slot1: document.querySelector('.slot-1'),
       slot2: document.querySelector('.slot-2'),
     }
+
   }
 
   drow() {
     this.ctx.drawImage(this.bg, this.x, this.y, this.w, this.h)
     if (Object.keys(this.cookiesRaised).length > 0) {
 
+      if (this.boosters?.gold) {
+        console.log('first')
+        this.ctx.drawImage(document.querySelector('#cookie-gold'), this.x, this.y + 25, 30, 30)
+        return;
+      }
+
       if (this.leftHand?.type) {
-        this.ctx.drawImage(document.querySelector(`#cookie${this.leftHand?.type}`), this.x - 10, this.y + 30, 15, 15)
+        this.ctx.drawImage(document.querySelector(`#cookie-${this.leftHand?.type}`), this.x - 10, this.y + 30, 15, 15)
       }
 
       if (this.rightHand?.type) {
-        this.ctx.drawImage(document.querySelector(`#cookie${this.rightHand?.type}`), this.x + this.w - 5, this.y + 30, 15, 15)
+        this.ctx.drawImage(document.querySelector(`#cookie-${this.rightHand?.type}`), this.x + this.w - 5, this.y + 30, 15, 15)
       }
 
     }
@@ -48,31 +56,59 @@ export default class Hero {
   }
 
   raiseCookie(id, type) {
-    this.cookiesRaised[id] = { id, type };
-    if (!this.leftHand) {
-      this.leftHand = this.cookiesRaised[id];
-      this.interfaceNodes.slot1.addEventListener('click', this.handleClickActiveCookie)
+    if (type === 'gold') {
+      this.boosters.gold = true;
+
+      let cookieID;
+      for (cookieID in this.cookiesRaised) {
+        delete this.cookiesRaised[cookieID];
+      }
+
       this.interfaceNodes.slot1.classList.add('slot_active');
       this.interfaceNodes.slot1.style.backgroundImage = `url("../../img/cookie/${type}.png")`;
-    } else {
+      this.interfaceNodes.slot2.classList.add('slot_active');
+      this.interfaceNodes.slot2.style.backgroundImage = `url("../../img/cookie/${type}.png")`;
+      return;
+    }
+
+    this.cookiesRaised[id] = { id, type };
+
+    if (!this.leftHand) {
+      this.leftHand = this.cookiesRaised[id];
+      this.interfaceNodes.slot1.classList.add('slot_active');
+      this.interfaceNodes.slot1.style.backgroundImage = `url("../../img/cookie/${type}.png")`;
+    } else if (!this.rightHand) {
       this.rightHand = this.cookiesRaised[id];
-      this.interfaceNodes.slot2.addEventListener('click', this.handleClickActiveCookie)
       this.interfaceNodes.slot2.classList.add('slot_active');
       this.interfaceNodes.slot2.style.backgroundImage = `url("../../img/cookie/${type}.png")`;
     }
   }
 
   deleteRaisedCookie(id) {
+    if (this.boosters?.gold) {
+      this.interfaceNodes.slot1.classList.remove('slot_active');
+      this.interfaceNodes.slot1.style.backgroundImage = null;
+      this.leftHand = null;
+
+      this.interfaceNodes.slot2.classList.remove('slot_active');
+      this.interfaceNodes.slot2.style.backgroundImage = null;
+      this.rightHand = null;
+
+      delete this.boosters.gold;
+      return;
+    }
+
     delete this.cookiesRaised[id];
+
     if (this.leftHand?.id == id) {
-      this.interfaceNodes.slot1.removeEventListener('click', this.handleClickActiveCookie)
+      // this.interfaceNodes.slot1.removeEventListener('click', this.handleClickActiveCookie)
       this.interfaceNodes.slot1.classList.remove('slot_active');
       this.interfaceNodes.slot1.style.backgroundImage = null;
       this.leftHand = null;
       return;
     }
     if (this.rightHand?.id == id) {
-      this.interfaceNodes.slot2.removeEventListener('click', this.handleClickActiveCookie)
+      // this.interfaceNodes.slot2.removeEventListener('click', this.handleClickActiveCookie)
       this.interfaceNodes.slot2.classList.remove('slot_active');
       this.interfaceNodes.slot2.style.backgroundImage = null;
       this.rightHand = null;
