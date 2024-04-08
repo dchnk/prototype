@@ -111,12 +111,20 @@ class Game {
       if (this.joystick.active) {
         this.hero.moveCheched(this.joystick.impuls);
       }
+      
+      if (!this.joystick.active) {
+        this.hero.checkPosition();
+      }
 
       if (this.time % 100 === 0) {
         this.checkLevel();
         this.checkSpawn();
         this.checkGetCookie();
         this.checkPutCookie();
+        
+        if (this.joystick.active) {
+          this.hero.checkPosition(this.joystick.impuls);
+        }
 
         let carID;
         for (carID in this.cars.cars) {
