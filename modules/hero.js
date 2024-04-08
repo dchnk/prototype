@@ -176,7 +176,7 @@ export default class Hero {
     let y = this.y - impuls.y * this.speed;
 
     if (x < 170 || x > 767) {
-      if (y < 170 || y > 740) {
+      if (y < 110 || y > 740) {
         return;
       }
 
@@ -185,7 +185,7 @@ export default class Hero {
     }
 
 
-    if (y < 170 || y > 740) {
+    if (y < 110 || y > 740) {
 
       if (x < 170 || x > 767) {
         return;

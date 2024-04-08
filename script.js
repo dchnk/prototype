@@ -8,29 +8,44 @@ class Game {
   constructor() {
     this.canvas = document.querySelector('.canvas');
     this.ctx = this.canvas.getContext('2d');
-
     this.time = 120000;
     this.timerNode = document.querySelector('.timer-num');
     this.pause = true;
     this.levels = [
       {
         level: 0,
-        endTime: 100000,
-        cookie: { pieces: 6, types: 2, spawnTime: 1500, lifeTime: 20000 },
-        car: { pieces: 3, types: 2, spawnTime: 3000, lifeTime: 20000 },
-      },
-      {
-        level: 1,
-        endTime: 40000,
-        cookie: { pieces: 12, types: 3, spawnTime: 1500, lifeTime: 15000 },
-        car: { pieces: 6, types: 3, spawnTime: 3000, lifeTime: 15000 },
-      },
-      {
-        level: 2,
         endTime: 0,
-        cookie: { pieces: 24, types: 5, spawnTime: 1500, lifeTime: 8000 },
-        car: { pieces: 12, types: 5, spawnTime: 2500, lifeTime: 10000 },
+        cookie: {
+          pieces: 10, types: 5, spawnTime: 1500, lifeTime: 20000, chance: {
+            1: 0.8,
+            2: 0.6,
+            1: 0.4,
+            2: 0.2,
+            1: 0.1,
+          }
+        },
+        car: {
+          pieces: 6, types: 5, spawnTime: 3000, lifeTime: 20000, chance: {
+            1: 0.8,
+            2: 0.6,
+            1: 0.4,
+            2: 0.2,
+            1: 0.1,
+          }
+        },
       },
+      // {
+      //   level: 1,
+      //   endTime: 60000,
+      //   cookie: { pieces: 12, types: 3, spawnTime: 1500, lifeTime: 15000 },
+      //   car: { pieces: 6, types: 3, spawnTime: 3000, lifeTime: 15000 },
+      // },
+      // {
+      //   level: 2,
+      //   endTime: 0,
+      //   cookie: { pieces: 24, types: 5, spawnTime: 1500, lifeTime: 8000 },
+      //   car: { pieces: 12, types: 5, spawnTime: 2500, lifeTime: 10000 },
+      // },
     ];
     this.level = null;
     this.score = 0;
@@ -98,7 +113,7 @@ class Game {
         this.timerNode.textContent = this.time / 1000;
       }
 
-      if (this.time ===  60000) {
+      if (this.time === 60000) {
         this.cookies.spawnCookie('gold');
       }
 
@@ -111,7 +126,7 @@ class Game {
       if (this.joystick.active) {
         this.hero.moveCheched(this.joystick.impuls);
       }
-      
+
       if (!this.joystick.active) {
         this.hero.checkPosition();
       }
@@ -121,7 +136,7 @@ class Game {
         this.checkSpawn();
         this.checkGetCookie();
         this.checkPutCookie();
-        
+
         if (this.joystick.active) {
           this.hero.checkPosition(this.joystick.impuls);
         }
@@ -194,7 +209,7 @@ class Game {
 
   checkGetCookie() {
     if (this.hero.boosters?.gold) return;
-    
+
     if (Object.keys(this.hero.cookiesRaised).length === this.hero.maxCookies) return;
 
     let i;
@@ -202,7 +217,7 @@ class Game {
       if (Object.keys(this.hero.cookiesRaised).length === this.hero.maxCookies) return;
       let cookie = this.cookies.cookies[i];
       if (cookie.droped) return;
-      
+
       if (this.hero.x >= cookie.x - this.hero.w - 5 && this.hero.x <= cookie.x + cookie.w + 5) {
         if (this.hero.y >= cookie.y - this.hero.h + 5 && this.hero.y <= cookie.y + cookie.h + 10) {
           this.hero.raiseCookie(cookie.id, cookie.type);
@@ -225,8 +240,8 @@ class Game {
           if (this.hero.boosters?.gold) {
             this.increseScore(15);
             this.scoreNode.textContent = this.score;
-            
-            
+
+
             car.isEnd = true;
             this.cars.deleteCar(car.id);
             this.hero.deleteRaisedCookie();
@@ -294,6 +309,7 @@ class Game {
 
     // Очищаем поле и рисуем карту каждый новый кадр
     this.ctx.clearRect(0, 0, 1000, 1000);
+
     this.map.drow();
 
     if (this.pause) return requestAnimationFrame(this.animate);
@@ -327,6 +343,9 @@ class Game {
 
     // Рисуем персонажа
     this.hero.drow();
+    this.ctx.font = "48px serif";
+    this.ctx.fillStyle = "#FFF";
+    this.ctx.fillText(`Уровни печенек: ${JSON.stringify(this.cookies.levels)}`, 100, 900)
 
     requestAnimationFrame(this.animate);
   }

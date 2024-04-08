@@ -7,6 +7,7 @@ export default class Cookies {
     this.ctx = ctx;
     this.config = config;
     this.cookies = {};
+    this.levels = {}
     this.types = 1;
     this.spawnTime = null;
     this._init();
@@ -30,6 +31,10 @@ export default class Cookies {
     let randomType = Math.round(getRandomArbitrary(1, this.types));
 
     const cookie = new Cookie(x ? x : null, y ? y : null, type ? type : randomType, this.config.lifeTime, droped);
+    if (!this.levels[cookie.type]) this.levels[cookie.type] = 0;
+    
+    this.levels[cookie.type] += 1;
+
     this.cookies[cookie.id] = cookie;
   }
 
@@ -43,7 +48,12 @@ export default class Cookies {
   }
 
   deleteCookie(id) {
+    let cookie;
+    
     if (!this.cookies[id]) return;
+    cookie = this.cookies[id];
+    
+    this.levels[cookie.type] --;
 
     delete this.cookies[id];
   }
