@@ -9,6 +9,14 @@
 
 <body>
   <img src="img/cook.png" alt="" id="cook" style="display: none;">
+  <img src="img/cook-man.png" alt="" id="cook" style="
+    display: block;
+    height: 500px;
+    width: 68px;
+    object-position: 100% 100%;
+    object-fit: cover;
+
+  ">
   <img src="img/cookie/gold.png" alt="" id="cookie-gold" style="display: none;">
   <img src="img/cookie/1.png" alt="" id="cookie-1" style="display: none;">
   <img src="img/cookie/2.png" alt="" id="cookie-2" style="display: none;">
@@ -43,7 +51,9 @@
     <div class="popup startMenu popup_active">
       <div class="menu_select" id="start">Начать игру</div>
       <div class="description">
-        А теперь запомни. Ты теперь пекарь! Ты теперь с пекарни, а кругом печеньки! Собирай их, когда они появляются и неси к нужной машине, чтобы получить очки. Бери за раз как можно больше, но не все сразу, руки то всего ДВЕ, если взял не ту печеньку тыкни на нее, чтобы выбросить. 
+        А теперь запомни. Ты теперь пекарь! Ты теперь с пекарни, а кругом печеньки! Собирай их, когда они появляются и
+        неси к нужной машине, чтобы получить очки. Бери за раз как можно больше, но не все сразу, руки то всего ДВЕ,
+        если взял не ту печеньку тыкни на нее, чтобы выбросить.
       </div>
     </div>
     <div class="popup pauseMenu">
@@ -52,7 +62,7 @@
     <div class="popup endMenu">
       <div class="text-end">Время вышло, игра окончена</div>
       <div class="menu_select">Ваш счет: <span class="score-num"></span></div>
-      
+
       <!-- <div class="menu_select" id="restart">Начать заново</div> -->
     </div>
   </div>
@@ -65,7 +75,7 @@
       position: relative;
       max-width: 1000px;
     }
-    
+
     .popup {
       position: absolute;
       top: 0;
@@ -74,19 +84,19 @@
       right: 0;
       display: none;
     }
-    
+
     .menu_select {
       color: white;
       font-size: 50px;
-      cursor: pointer;      
+      cursor: pointer;
       border-bottom: 3px solid white;
     }
-    
+
     .menu_select:hover {
       width: max-content;
       font-size: 55px;
     }
-    
+
     .popup_active {
       display: flex;
       flex-direction: column;
@@ -94,7 +104,7 @@
       align-items: center;
       background-color: rgba(58, 10, 59, 0.788);
     }
-    
+
     .description {
       font-size: 20px;
       color: white;
@@ -155,7 +165,7 @@
       margin-right: 20px;
       user-select: none;
     }
-    
+
     .slot_active {
       background-color: transparent;
       border-radius: 0;
@@ -163,7 +173,7 @@
       background-size: contain;
       transition: tansform .3s ease-in-out;
     }
-    
+
     .slot:last-child {
       margin-right: 0;
     }
