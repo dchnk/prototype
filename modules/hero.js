@@ -27,9 +27,8 @@ export default class Hero {
   drow() {
     if (this.direction === 'bottom') {
       this.ctx.drawImage(this.cookBG, this.positions[this.direction].startX + this.w * this.positions[this.direction].current, this.positions[this.direction].startY, this.w, this.h, this.x, this.y, this.w, this.h)
-      console.log('bottom')
+   
       if (this.boosters?.gold) {
-        console.log('first')
         this.ctx.drawImage(document.querySelector('#cookie-gold'), this.x , this.y + 30, 30, 30)
         return;
       }
@@ -50,7 +49,6 @@ export default class Hero {
 
 
     if (this.boosters?.gold) {
-      console.log('first')
       this.ctx.drawImage(document.querySelector('#cookie-gold'), this.x + 35, this.y + 30, 30, 30)
       this.ctx.drawImage(this.cookBG, this.positions[this.direction].startX + this.w * this.positions[this.direction].current, this.positions[this.direction].startY, this.w, this.h, this.x, this.y, this.w, this.h)
       return;
@@ -133,14 +131,12 @@ export default class Hero {
     delete this.cookiesRaised[id];
 
     if (this.leftHand?.id == id) {
-      // this.interfaceNodes.slot1.removeEventListener('click', this.handleClickActiveCookie)
       this.interfaceNodes.slot1.classList.remove('slot_active');
       this.interfaceNodes.slot1.style.backgroundImage = null;
       this.leftHand = null;
       return;
     }
     if (this.rightHand?.id == id) {
-      // this.interfaceNodes.slot2.removeEventListener('click', this.handleClickActiveCookie)
       this.interfaceNodes.slot2.classList.remove('slot_active');
       this.interfaceNodes.slot2.style.backgroundImage = null;
       this.rightHand = null;

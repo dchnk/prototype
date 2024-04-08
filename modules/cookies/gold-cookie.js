@@ -9,6 +9,5 @@ export default class GoldCookie extends Cookie {
     this.h = 35;
     this.bg = document.querySelector(`#cookie-${this.type}`);
     this.init()
-    console.log(this)
   }
 }

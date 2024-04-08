@@ -25,12 +25,12 @@ class Game {
         cookie: { pieces: 12, types: 3, spawnTime: 1500, lifeTime: 15000 },
         car: { pieces: 6, types: 3, spawnTime: 3000, lifeTime: 15000 },
       },
-      // {
-      //   level: 2,
-      //   endTime: 0,
-      //   cookie: { pieces: 10, types: 1, spawnTime: 1000, lifeTime: 3000 },
-      //   car: { pieces: 3, types: 1, spawnTime: 3000, lifeTime: 10000 },
-      // },
+      {
+        level: 2,
+        endTime: 0,
+        cookie: { pieces: 24, types: 5, spawnTime: 1500, lifeTime: 8000 },
+        car: { pieces: 12, types: 5, spawnTime: 2500, lifeTime: 10000 },
+      },
     ];
     this.level = null;
     this.score = 0;
@@ -98,7 +98,7 @@ class Game {
         this.timerNode.textContent = this.time / 1000;
       }
 
-      if (this.time ===  119000) {
+      if (this.time ===  60000) {
         this.cookies.spawnCookie('gold');
       }
 
@@ -199,14 +199,14 @@ class Game {
 
     let i;
     for (i in this.cookies.cookies) {
+      if (Object.keys(this.hero.cookiesRaised).length === this.hero.maxCookies) return;
       let cookie = this.cookies.cookies[i];
       if (cookie.droped) return;
       
-      if (this.hero.x >= cookie.x - cookie.w - 5 && this.hero.x <= cookie.x + cookie.w + 5) {
-        if (this.hero.y >= cookie.y - 50 && this.hero.y <= cookie.y + cookie.h + 10) {
+      if (this.hero.x >= cookie.x - this.hero.w - 5 && this.hero.x <= cookie.x + cookie.w + 5) {
+        if (this.hero.y >= cookie.y - this.hero.h + 5 && this.hero.y <= cookie.y + cookie.h + 10) {
           this.hero.raiseCookie(cookie.id, cookie.type);
           this.cookies.deleteCookie(cookie.id);
-          continue;
         }
       }
     }
