@@ -158,10 +158,9 @@ export default class Hero {
     }
 
     if (impuls.x < 0 && Math.abs(impuls.x) - Math.abs(impuls.y) > 0) {
-      console.log(Math.abs(impuls.x) - Math.abs(impuls.y))
       this.direction = 'left';
       this.positions.left.current += 1;
-      if (this.positions.left.current > 5) {
+      if (this.positions.left.current > 6) {
         return this.positions.left.current = 1;
       }
 
@@ -172,7 +171,7 @@ export default class Hero {
       console.log(Math.abs(impuls.x) - Math.abs(impuls.y))
       this.direction = 'right';
       this.positions.right.current += 1;
-      if (this.positions.right.current > 5) {
+      if (this.positions.right.current > 6) {
         return this.positions.right.current = 1;
       }
       return;
@@ -181,7 +180,7 @@ export default class Hero {
     if (impuls.y > 0) {
       this.direction = 'top';
       this.positions.top.current += 1;
-      if (this.positions.top.current > 5) {
+      if (this.positions.top.current > 6) {
         return this.positions.top.current = 1;
       }
       return;
@@ -190,11 +189,12 @@ export default class Hero {
     if (impuls.y < 0) {
       this.direction = 'bottom';
       this.positions.bottom.current += 1;
-      if (this.positions.bottom.current > 5) {
+      if (this.positions.bottom.current > 6) {
         return this.positions.bottom.current = 1;
       }
       return;
     }
+    
   }
 
   moveCheched(impuls) {

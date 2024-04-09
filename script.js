@@ -118,7 +118,7 @@ class Game {
       this.time <= 0 ? 0 : this.time -= 10;
 
       if (this.time % 1000 === 0) {
-        this.timerNode.textContent = this.time / 1000;
+        this.timerNode.textContent = this.time / 1000;        
       }
 
       if (this.time === 60000) {
@@ -137,15 +137,17 @@ class Game {
         this.hero.moveCheched(this.joystick.impuls);
       }
 
-      if (!this.joystick.active) {
-        this.hero.checkPosition();
-      }
+     
 
       if (this.time % 100 === 0) {
         this.checkLevel();
         this.checkSpawn();
         this.checkGetCookie();
         this.checkPutCookie();
+        
+        if (!this.joystick.active) {
+          this.hero.checkPosition();
+        }
 
         if (this.joystick.active) {
           this.hero.checkPosition(this.joystick.impuls);
@@ -212,9 +214,7 @@ class Game {
         
         if (!this.cookies.levels[level]) continue;
 
-        if (!this.cars.levels[level]) {
-          console.log(level)
-          
+        if (!this.cars.levels[level]) {          
 
           if (Math.random > 0.2) continue;
 
