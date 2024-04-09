@@ -78,23 +78,25 @@ class Game {
     })
 
     this.interfaceNodes.slot2.addEventListener('click', () => {
+      if (this.hero.boosters?.gold) {
+        this.hero.deleteRaisedCookie();
+        return;
+      }
+
       if (!this.hero.rightHand.type) return;
 
       this.cookies.spawnCookie(this.hero.rightHand.type, this.hero.x, this.hero.y + this.hero.h / 2, true);
       this.hero.deleteRaisedCookie(this.hero.rightHand.id);
     })
 
-    this.canvas.addEventListener('mousedown', (evt) => {
+    document.addEventListener('keydown', (e) => {
       if (Object.keys(this.hero.cookiesRaised).length === 0) return;
-
-      let x = evt.clientX;
-      let y = evt.offsetY;
-
-      if (x >= this.hero.x - 15 && x <= this.hero.x + this.hero.w + 20
-        && y >= this.hero.y - 10 && y <= this.hero.y + this.hero.h + 10) {
+      
+      if (e.code === 'Space') {
         this.handleDropCookie();
-      }
+      }      
     })
+
     this.joystick.nodes.joystick.addEventListener('click', () => {
       if (!this.pause) this.pause = false;
     })
