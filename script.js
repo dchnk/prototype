@@ -4,12 +4,18 @@ import Hero from "./modules/hero.js";
 import Cookies from "./modules/cookies.js";
 import Cars from "./modules/cars.js";
 
+document.querySelector('#restart').addEventListener('click', () => {
+  location.reload()
+})
+
 class Game {
   constructor() {
     this.canvas = document.querySelector('.canvas');
     this.ctx = this.canvas.getContext('2d');
     this.time = 120000;
     this.timerNode = document.querySelector('.timer-num');
+    this.gameoverMenu = document.querySelector('.endMenu');
+    this.gameoverScore = document.querySelector('.gameover_score-num');
     this.pause = true;
     this.levels = [
       {
@@ -121,6 +127,8 @@ class Game {
 
       if (this.time === 0) {
         clearInterval(gameTimer);
+        this.gameoverScore.textContent = this.score;
+        this.gameoverMenu.classList.add('popup_active');
         return console.log('gameover');
       };
 

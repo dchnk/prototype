@@ -54,9 +54,9 @@
     </div>
     <div class="popup endMenu">
       <div class="text-end">Время вышло, игра окончена</div>
-      <div class="menu_select">Ваш счет: <span class="score-num"></span></div>
+      <div class="gameover_score">Ваш счет: <span class="gameover_score-num"></span></div>
 
-      <!-- <div class="menu_select" id="restart">Начать заново</div> -->
+      <div class="menu_select" id="restart">Начать заново</div>
     </div>
   </div>
 
@@ -83,6 +83,12 @@
       font-size: 50px;
       cursor: pointer;
       border-bottom: 3px solid white;
+    }
+
+    .gameover_score {
+      color: white;
+      font-size: 90px;
+      margin-bottom: 30px;
     }
 
     .menu_select:hover {
