@@ -14,6 +14,8 @@ export default class Hero {
     this.positions = {
       bottom: { startX: 0, startY: 0, current: 0 },
       top: { startX: 0, startY: this.h, current: 0 },
+      left: { startX: 0, startY: this.h * 2, current: 0 },
+      right: { startX: 0, startY: this.h * 3, current: 0 },
     }
     this.direction = 'bottom';
     this.speed = 2;
@@ -27,9 +29,9 @@ export default class Hero {
   drow() {
     if (this.direction === 'bottom') {
       this.ctx.drawImage(this.cookBG, this.positions[this.direction].startX + this.w * this.positions[this.direction].current, this.positions[this.direction].startY, this.w, this.h, this.x, this.y, this.w, this.h)
-   
+
       if (this.boosters?.gold) {
-        this.ctx.drawImage(document.querySelector('#cookie-gold'), this.x , this.y + 30, 30, 30)
+        this.ctx.drawImage(document.querySelector('#cookie-gold'), this.x, this.y + 30, 30, 30)
         return;
       }
 
@@ -149,25 +151,49 @@ export default class Hero {
       this.positions[this.direction].current = 0;
       return;
     }
-
-    let x = this.x + impuls.x * this.speed;
-    let y = this.y - impuls.y * this.speed;
-
-    if (y > this.y) {
-      this.direction = 'bottom';
-      this.positions.bottom.current += 1;
-      if (this.positions.bottom.current > 5) {
-        return this.positions.bottom.current = 1;
-      }
+    
+    if (impuls.x === 0 && impuls.y === 0) {
+      this.positions[this.direction].current = 0;
+      return;
     }
 
-    if (y < this.y) {
+    if (impuls.x < 0 && Math.abs(impuls.x) - Math.abs(impuls.y) > 0) {
+      console.log(Math.abs(impuls.x) - Math.abs(impuls.y))
+      this.direction = 'left';
+      this.positions.left.current += 1;
+      if (this.positions.left.current > 5) {
+        return this.positions.left.current = 1;
+      }
+
+      return;
+    }
+
+    if (impuls.x > 0 && Math.abs(impuls.x) - Math.abs(impuls.y) > 0) {
+      console.log(Math.abs(impuls.x) - Math.abs(impuls.y))
+      this.direction = 'right';
+      this.positions.right.current += 1;
+      if (this.positions.right.current > 5) {
+        return this.positions.right.current = 1;
+      }
+      return;
+    }
+
+    if (impuls.y > 0) {
       this.direction = 'top';
       this.positions.top.current += 1;
       if (this.positions.top.current > 5) {
         return this.positions.top.current = 1;
       }
+      return;
+    }
 
+    if (impuls.y < 0) {
+      this.direction = 'bottom';
+      this.positions.bottom.current += 1;
+      if (this.positions.bottom.current > 5) {
+        return this.positions.bottom.current = 1;
+      }
+      return;
     }
   }
 

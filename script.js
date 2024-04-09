@@ -343,9 +343,9 @@ class Game {
 
     // Рисуем персонажа
     this.hero.drow();
-    this.ctx.font = "48px serif";
-    this.ctx.fillStyle = "#FFF";
-    this.ctx.fillText(`Уровни печенек: ${JSON.stringify(this.cookies.levels)}`, 100, 900)
+    // this.ctx.font = "48px serif";
+    // this.ctx.fillStyle = "#FFF";
+    // this.ctx.fillText(`Уровни печенек: ${JSON.stringify(this.cookies.levels)}`, 100, 900)
 
     requestAnimationFrame(this.animate);
   }
