@@ -97,9 +97,9 @@ export default class Hero {
       }
 
       this.interfaceNodes.slot1.classList.add('slot_active');
-      this.interfaceNodes.slot1.style.backgroundImage = `url("../../img/cookie/${type}.png")`;
+      this.interfaceNodes.slot1.style.backgroundImage = `url("./img/cookie/${type}.png")`;
       this.interfaceNodes.slot2.classList.add('slot_active');
-      this.interfaceNodes.slot2.style.backgroundImage = `url("../../img/cookie/${type}.png")`;
+      this.interfaceNodes.slot2.style.backgroundImage = `url("./img/cookie/${type}.png")`;
       return;
     }
 
@@ -108,11 +108,11 @@ export default class Hero {
     if (!this.leftHand) {
       this.leftHand = this.cookiesRaised[id];
       this.interfaceNodes.slot1.classList.add('slot_active');
-      this.interfaceNodes.slot1.style.backgroundImage = `url("../../img/cookie/${type}.png")`;
+      this.interfaceNodes.slot1.style.backgroundImage = `url("./img/cookie/${type}.png")`;
     } else if (!this.rightHand) {
       this.rightHand = this.cookiesRaised[id];
       this.interfaceNodes.slot2.classList.add('slot_active');
-      this.interfaceNodes.slot2.style.backgroundImage = `url("../../img/cookie/${type}.png")`;
+      this.interfaceNodes.slot2.style.backgroundImage = `url("./img/cookie/${type}.png")`;
     }
   }
 

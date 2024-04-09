@@ -210,13 +210,13 @@ class Game {
       let level;
       for (level in this.cookies.levels) {
         
-        if (this.cookies.levels[level] === 0) return;
+        if (!this.cookies.levels[level]) continue;
 
         if (!this.cars.levels[level]) {
           console.log(level)
           
 
-          if (Math.random > 0.2) return;
+          if (Math.random > 0.2) continue;
 
           return this.cars.spawnCar(level);
         }
