@@ -28,13 +28,13 @@
     <div class="interface">
       <div class="score">Счет: <span class="score-num">0</span></div>
       <div class="timer">Таймер: <span class="timer-num">120</span></div>
-      <div class="inventary">
-        <span class="text">Нажми на печеньку, чтобы удалить</span>
-        <div class="slots">
-          <div class="slot slot-1" id="leftHand"></div>
-          <div class="slot slot-2" id="rightHand"></div>
-        </div>
+    </div>
+    <div class="inventary">
+      <div class="slots">
+        <div class="slot slot-1" id="leftHand"></div>
+        <div class="slot slot-2" id="rightHand"></div>
       </div>
+      <span class="text">Нажми на печеньку, чтобы удалить</span>
     </div>
     <div class="joystick">
       <div class="joystick__content">
@@ -131,17 +131,19 @@
     }
 
     .inventary {
+      position: absolute;
+      bottom: 3%;
+      left: 5%;
       display: flex;
       flex-direction: column;
-      position: relative;
       width: 200px;
     }
 
     .text {
+      margin-top: 10px;
       width: 100%;
-      bottom: -30px;
       font-size: 13px;
-      margin-bottom: 10px;
+      color: white;
       user-select: none;
     }
 
