@@ -91,10 +91,10 @@ class Game {
 
     document.addEventListener('keydown', (e) => {
       if (Object.keys(this.hero.cookiesRaised).length === 0) return;
-      
+
       if (e.code === 'Space') {
         this.handleDropCookie();
-      }      
+      }
     })
 
     this.joystick.nodes.joystick.addEventListener('click', () => {
@@ -192,10 +192,28 @@ class Game {
       this.cookies.spawnCookie();
     }
 
+
+
+
     // Проверяем по времени повторения респавна машинки текущего уровня и количество машинок на поле,
     // если не хватает, то спавним новую машинку
 
     if (this.time % this.cars.spawnTime === 0 && Object.keys(this.cars.cars).length < this.level.car.pieces) {
+      let level;
+      for (level in this.cookies.levels) {
+        
+        if (this.cookies.levels[level] === 0) return;
+
+        if (!this.cars.levels[level]) {
+          console.log(level)
+          
+
+          if (Math.random > 0.2) return;
+
+          return this.cars.spawnCar(level);
+        }
+      }
+
       this.cars.spawnCar();
     }
 

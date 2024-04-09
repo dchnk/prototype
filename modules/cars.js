@@ -6,6 +6,7 @@ export default class Cars {
     this.ctx = ctx;
     this.config = config;
     this.cars = {};
+    this.levels = {}
     this.types = 1;
     this.spawnTime = null;
     this._init();
@@ -41,6 +42,10 @@ export default class Cars {
       }
     }
 
+    if (!this.levels[car.type]) this.levels[car.type] = 0;
+    
+    this.levels[car.type] += 1;
+
     this.cars[car.id] = car;
   }
 
@@ -72,7 +77,9 @@ export default class Cars {
     if (!this.cars[id]) return;
 
     setTimeout(() => {
+      this.levels[this.cars[id].type] --;
       delete this.cars[id];
+
     }, 3000)
   }
 
