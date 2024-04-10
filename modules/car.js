@@ -1,5 +1,6 @@
 export default class Car {
-  constructor(type, lifeTime = 15000, side) {
+  constructor(type, lifeTime = 15000, side, canvas) {
+    this.canvas = canvas;
     this.id = null;
     this.w = null;
     this.h = null;
@@ -20,8 +21,8 @@ export default class Car {
     this.bg = null;
     this.cookieImg = document.querySelector(`#cookie-${type}`)
     this.loading = null;
-    this.loadingW = 70;
-    this.loadingH = 70;
+    this.loadingW = this.canvas.height * 0.07;
+    this.loadingH = this.canvas.height * 0.07;
     this.loadingX = null;
     this.loadingY = null;
     this.init();
@@ -36,70 +37,70 @@ export default class Car {
 
     let x, y, bg;
     switch (this.side) {
-      
+
 
       // top
       case 1:
-        x = Math.round(getRandomArbitrary(160, 720));
-        y = 40;
-        this.w = 125;
-        this.h = 125;
+        x = Math.round(getRandomArbitrary(this.canvas.height * 0.16, this.canvas.height * 0.72));
+        y = Math.round(this.canvas.height * 0.04);
+        this.w = this.canvas.height * 0.125;
+        this.h = this.canvas.height * 0.125;
 
         this.firstX = x;
-        this.firstY = y - 50;
+        this.firstY = y - Math.round(this.canvas.height * 0.05);
 
         bg = document.querySelector('#car-top');
         this.loading = document.querySelector('#loading');
-        this.loadingX = x + 28;
-        this.loadingY = y + 130;
+        this.loadingX = x + this.canvas.height * 0.028;
+        this.loadingY = y + this.canvas.height * 0.130;
         break;
 
       // bottom
       case 2:
-        x = Math.round(getRandomArbitrary(160, 720));
-        y = 820;
-        this.w = 150;
-        this.h = 150;
+        x = Math.round(getRandomArbitrary(this.canvas.height * 0.16, this.canvas.height * 0.72));
+        y = Math.round(this.canvas.height * 0.82);
+        this.w = this.canvas.height * 0.15;
+        this.h = this.canvas.height * 0.15;
 
         this.firstX = x;
-        this.firstY = y + 50;
+        this.firstY = y + Math.round(this.canvas.height * 0.05);
 
         bg = document.querySelector('#car-bottom');
         this.loading = document.querySelector('#loading');
-        this.loadingX = x + 40;
-        this.loadingY = y - 60;
+        this.loadingX = x + this.canvas.height * 0.04;
+        this.loadingY = y - this.canvas.height * 0.06;
         break;
 
       // left
       case 3:
-        x = 10;
-        y = Math.round(getRandomArbitrary(130, 720));
-        this.w = 215;
-        this.h = 107;
+        x = Math.round(this.canvas.height * 0.01);
+        y = Math.round(getRandomArbitrary(this.canvas.height * 0.16, this.canvas.height * 0.72));
+        this.w = this.canvas.height * 0.215;
+        this.h = this.canvas.height * 0.107;
 
-        this.firstX = x - 50;
+        this.firstX = x - Math.round(this.canvas.height * 0.05);
         this.firstY = y;
 
         bg = document.querySelector('#car-left');
         this.loading = document.querySelector('#loading-vert');
-        this.loadingX = x + 165;
-        this.loadingY = y + 30;
+        this.loadingX = x + this.canvas.height * 0.165;
+        this.loadingY = y + this.canvas.height * 0.03;
         break;
 
       // right
       case 4:
-        x = 780;
-        y = Math.round(getRandomArbitrary(130, 720));
-        this.w = 215;
-        this.h = 107;
+        x = Math.round(this.canvas.height * 0.78);
+        y = Math.round(getRandomArbitrary(this.canvas.height * 0.13, this.canvas.height * 0.72));
+        this.w = this.canvas.height * 0.215;
+        this.h = this.canvas.height * 0.107;
 
-        this.firstX = x + 50;
+        this.firstX = x + Math.round(this.canvas.height * 0.05);
         this.firstY = y;
 
         bg = document.querySelector('#car-right');
         this.loading = document.querySelector('#loading-vert');
-        this.loadingX = x - 25;
-        this.loadingY = y + 30;
+        this.loadingX = x - this.canvas.height * 0.025;
+        this.loadingY = y + this.canvas.height * 0.03;
         break;
     }
 
@@ -127,13 +128,13 @@ export default class Car {
 
         default: break;
       }
-      
-      
+
+
       if (this.firstX === this.x && this.firstY === this.y) {
         this.isStart = false;
       }
     }
-    
+
     if (this.isEnd) {
       switch (this.side) {
         case 1:
@@ -154,13 +155,13 @@ export default class Car {
 
         default: break;
       }
-      
-      
+
+
       if (this.firstX === this.x && this.firstY === this.y) {
         this.isEnd = false;
       }
     }
-    
+
   }
 
   init() {

@@ -60,10 +60,10 @@ class Game {
     this.score = 0;
     this.scoreNode = document.querySelector('.score-num');
     this.joystick = new Joystick();
-    this.map = new Map(this.ctx);
-    this.hero = new Hero(this.ctx);
-    this.cookies = new Cookies(this.ctx, this.levels[0].cookie);
-    this.cars = new Cars(this.ctx, this.levels[0].car);
+    this.map = new Map(this.ctx, this.canvas);
+    this.hero = new Hero(this.ctx, this.canvas);
+    this.cookies = new Cookies(this.ctx, this.levels[0].cookie, this.canvas);
+    this.cars = new Cars(this.ctx, this.levels[0].car, this.canvas);
     this.interfaceNodes = {
       slot1: document.querySelector('.slot-1'),
       slot2: document.querySelector('.slot-2'),
@@ -250,8 +250,8 @@ class Game {
       let cookie = this.cookies.cookies[i];
       if (cookie.droped) return;
 
-      if (this.hero.x >= cookie.x - this.hero.w - 5 && this.hero.x <= cookie.x + cookie.w + 5) {
-        if (this.hero.y >= cookie.y - this.hero.h + 5 && this.hero.y <= cookie.y + cookie.h + 10) {
+      if (this.hero.x >= cookie.x - this.hero.w - (this.canvas.height * 0.005) && this.hero.x <= cookie.x + cookie.w + (this.canvas.height * 0.005)) {
+        if (this.hero.y >= cookie.y - this.hero.h + (this.canvas.height * 0.005) && this.hero.y <= cookie.y + cookie.h + (this.canvas.height * 0.01)) {
           this.hero.raiseCookie(cookie.id, cookie.type);
           this.cookies.deleteCookie(cookie.id);
         }
@@ -264,8 +264,8 @@ class Game {
     for (carID in this.cars.cars) {
       car = this.cars.cars[carID];
 
-      if (this.hero.x >= car.loadingX - this.hero.w - 5 && this.hero.x <= car.loadingX + car.loadingW + 5) {
-        if (this.hero.y >= car.loadingY - 50 && this.hero.y <= car.loadingY + car.loadingW + 10) {
+      if (this.hero.x >= car.loadingX - this.hero.w - (this.canvas.height * 0.005) && this.hero.x <= car.loadingX + car.loadingW + (this.canvas.height * 0.005)) {
+        if (this.hero.y >= car.loadingY - (this.canvas.height * 0.05) && this.hero.y <= car.loadingY + car.loadingW + (this.canvas.height * 0.01)) {
           if (car.isStart || car.isEnd) return;
           let cookieID, cookie;
 
@@ -340,7 +340,7 @@ class Game {
     let carsLength = Object.keys(cars).length;
 
     // Очищаем поле и рисуем карту каждый новый кадр
-    this.ctx.clearRect(0, 0, 1000, 1000);
+    this.ctx.clearRect(0, 0, this.canvas.height, this.canvas.height);
 
     this.map.drow();
 

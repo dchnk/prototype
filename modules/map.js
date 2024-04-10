@@ -1,10 +1,12 @@
 export default class Map {
-  constructor(ctx) {
+  constructor(ctx, canvas) {
     this.ctx = ctx;
-    this.x = -100;
-    this.y = -100;
-    this.w = 1200;
-    this.h = 1200;
+    this.w = canvas.height * 1.2;
+    this.h = canvas.height * 1.2;
+    console.log(this.h)
+    
+    this.x = -(canvas.height * 0.1);
+    this.y = -(canvas.height * 0.1);
     this.bg = document.querySelector('#map');
   }
 

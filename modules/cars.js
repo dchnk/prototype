@@ -2,7 +2,9 @@ import Car from "./car.js";
 
 export default class Cars {
 
-  constructor(ctx, config) {
+  constructor(ctx, config, canvas) {
+    console.log(canvas)
+    this.canvas = canvas;
     this.ctx = ctx;
     this.config = config;
     this.cars = {};
@@ -28,15 +30,15 @@ export default class Cars {
 
     let randomSide = Math.round(getRandomArbitrary(1, 4));
 
-    let car = new Car(type ? type : randomType, this.config.lifeTime, randomSide);
+    let car = new Car(type ? type : randomType, this.config.lifeTime, randomSide, this.canvas);
 
     let id, item;
     for (id in this.cars) {
       item = this.cars[id]
       if (car.id === item.id) return;
 
-      if (car.loadingX >= item.loadingX - item.loadingW - 10 && car.loadingX <= item.loadingX + item.loadingW + 10
-        && car.loadingY >= item.loadingY - car.loadingH - 10 && car.loadingY <= item.loadingY + item.loadingY + 10) {
+      if (car.loadingX >= item.loadingX - item.loadingW - (this.canvas.height * 0.01) && car.loadingX <= item.loadingX + item.loadingW + (this.canvas.height * 0.01)
+        && car.loadingY >= item.loadingY - car.loadingH - (this.canvas.height * 0.01) && car.loadingY <= item.loadingY + item.loadingY + (this.canvas.height * 0.01)) {
         this.spawnCar(randomType)
         return;
       }
