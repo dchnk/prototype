@@ -11,6 +11,9 @@ document.querySelector('#restart').addEventListener('click', () => {
 class Game {
   constructor() {
     this.canvas = document.querySelector('.canvas');
+    this.canvas.width = window.innerHeight;
+    this.canvas.height = window.innerHeight;    
+    
     this.ctx = this.canvas.getContext('2d');
     this.time = 120000;
     this.timerNode = document.querySelector('.timer-num');
@@ -68,10 +71,12 @@ class Game {
   }
 
   init() {
+  
     this.level = this.levels[0];
     this.updateConfigs();
 
     this.interfaceNodes.slot1.addEventListener('click', () => {
+      if (Object.keys(this.hero.cookiesRaised).length === 0) return;
       if (this.hero.boosters?.gold) {
         this.hero.deleteRaisedCookie();
         return;
@@ -84,6 +89,7 @@ class Game {
     })
 
     this.interfaceNodes.slot2.addEventListener('click', () => {
+      if (Object.keys(this.hero.cookiesRaised).length === 0) return;
       if (this.hero.boosters?.gold) {
         this.hero.deleteRaisedCookie();
         return;
@@ -118,7 +124,7 @@ class Game {
       this.time <= 0 ? 0 : this.time -= 10;
 
       if (this.time % 1000 === 0) {
-        this.timerNode.textContent = this.time / 1000;        
+        this.timerNode.textContent = this.time / 1000;
       }
 
       if (this.time === 60000) {
@@ -137,14 +143,14 @@ class Game {
         this.hero.moveCheched(this.joystick.impuls);
       }
 
-     
+
 
       if (this.time % 100 === 0) {
         this.checkLevel();
         this.checkSpawn();
         this.checkGetCookie();
         this.checkPutCookie();
-        
+
         if (!this.joystick.active) {
           this.hero.checkPosition();
         }
@@ -168,9 +174,7 @@ class Game {
         }
 
       }
-
-
-
+      
     }, 10)
 
     requestAnimationFrame(this.animate);
@@ -211,10 +215,10 @@ class Game {
     if (this.time % this.cars.spawnTime === 0 && Object.keys(this.cars.cars).length < this.level.car.pieces) {
       let level;
       for (level in this.cookies.levels) {
-        
+
         if (!this.cookies.levels[level]) continue;
 
-        if (!this.cars.levels[level]) {          
+        if (!this.cars.levels[level]) {
 
           if (Math.random > 0.2) continue;
 

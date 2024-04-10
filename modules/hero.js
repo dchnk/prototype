@@ -48,6 +48,55 @@ export default class Hero {
       }
       return;
     }
+    
+    if (this.direction === 'left') {
+      if (this.boosters?.gold) {
+        this.ctx.drawImage(document.querySelector('#cookie-gold'), this.x, this.y + 30, 30, 30)
+        return;
+      }
+      
+      if (Object.keys(this.cookiesRaised).length > 0) {
+
+        if (this.leftHand?.type) {
+          this.ctx.drawImage(document.querySelector(`#cookie-${this.leftHand?.type}`), this.x -5, this.y + 40, 25, 25)
+        }
+        
+        this.ctx.drawImage(this.cookBG, this.positions[this.direction].startX + this.w * this.positions[this.direction].current, this.positions[this.direction].startY, this.w, this.h, this.x, this.y, this.w, this.h)
+
+        if (this.rightHand?.type) {
+          this.ctx.drawImage(document.querySelector(`#cookie-${this.rightHand?.type}`), this.x + 15, this.y + 40, 25, 25)
+        }
+        return;
+      }
+      
+      this.ctx.drawImage(this.cookBG, this.positions[this.direction].startX + this.w * this.positions[this.direction].current, this.positions[this.direction].startY, this.w, this.h, this.x, this.y, this.w, this.h)
+      return;
+    }
+    
+    if (this.direction === 'right') {      
+
+      if (this.boosters?.gold) {
+        this.ctx.drawImage(document.querySelector('#cookie-gold'), this.x, this.y + 30, 30, 30)
+        return;
+      }
+      
+      if (Object.keys(this.cookiesRaised).length > 0) {
+
+        if (this.leftHand?.type) {
+          this.ctx.drawImage(document.querySelector(`#cookie-${this.leftHand?.type}`), this.x + this.w - 20, this.y + 40, 25, 25)
+        }
+        
+        this.ctx.drawImage(this.cookBG, this.positions[this.direction].startX + this.w * this.positions[this.direction].current, this.positions[this.direction].startY, this.w, this.h, this.x, this.y, this.w, this.h)
+
+        if (this.rightHand?.type) {
+          this.ctx.drawImage(document.querySelector(`#cookie-${this.rightHand?.type}`), this.x + 15, this.y + 40, 25, 25)
+        }
+        return;
+      }
+      
+      this.ctx.drawImage(this.cookBG, this.positions[this.direction].startX + this.w * this.positions[this.direction].current, this.positions[this.direction].startY, this.w, this.h, this.x, this.y, this.w, this.h)
+      return;
+    }
 
 
     if (this.boosters?.gold) {

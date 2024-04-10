@@ -24,7 +24,7 @@
   <img src="img/car/loading.png" alt="" id="loading" style="display: none;">
   <img src="img/car/loading-vert.png" alt="" id="loading-vert" style="display: none;">
   <div class="container">
-    <canvas class="canvas" width="1000" height="1000"></canvas>
+    <canvas class="canvas"></canvas>
     <div class="interface">
       <div class="score">Счет: <span class="score-num">0</span></div>
       <div class="timer">Таймер: <span class="timer-num">120</span></div>
@@ -64,9 +64,15 @@
   <script type="module" src="script.js"></script>
 
   <style>
+    body {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+  
     .container {
       position: relative;
-      max-width: 1000px;
+      max-width: max-content
     }
 
     .popup {
