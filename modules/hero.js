@@ -1,10 +1,11 @@
 export default class Hero {
-  constructor(ctx) {
+  constructor(ctx, canvas) {
+    this.canvas = canvas;
     this.ctx = ctx;
-    this.x = 500;
-    this.y = 500;
-    this.w = 60;
-    this.h = 90;
+    this.x = this.canvas.height * 0.5
+    this.y = this.canvas.height * 0.5
+    this.w = this.canvas.height * 0.06;
+    this.h = this.canvas.height * 0.09;
     this.maxCookies = 2;
     this.cookiesRaised = {};
     this.leftHand = null;
@@ -13,9 +14,9 @@ export default class Hero {
     this.cookBG = document.querySelector('#cook-man');
     this.positions = {
       bottom: { startX: 0, startY: 0, current: 0 },
-      top: { startX: 0, startY: this.h, current: 0 },
-      left: { startX: 0, startY: this.h * 2, current: 0 },
-      right: { startX: 0, startY: this.h * 3, current: 0 },
+      top: { startX: 0, startY: 90, current: 0 },
+      left: { startX: 0, startY: 90 * 2, current: 0 },
+      right: { startX: 0, startY: 90 * 3, current: 0 },
     }
     this.direction = 'bottom';
     this.speed = 2;
@@ -28,7 +29,7 @@ export default class Hero {
 
   drow() {
     if (this.direction === 'bottom') {
-      this.ctx.drawImage(this.cookBG, this.positions[this.direction].startX + this.w * this.positions[this.direction].current, this.positions[this.direction].startY, this.w, this.h, this.x, this.y, this.w, this.h)
+      this.ctx.drawImage(this.cookBG, this.positions[this.direction].startX + 60 * this.positions[this.direction].current, this.positions[this.direction].startY, 60, 90, this.x, this.y, this.w, this.h);
 
       if (this.boosters?.gold) {
         this.ctx.drawImage(document.querySelector('#cookie-gold'), this.x, this.y + 30, 30, 30)
@@ -48,60 +49,60 @@ export default class Hero {
       }
       return;
     }
-    
+
     if (this.direction === 'left') {
       if (this.boosters?.gold) {
         this.ctx.drawImage(document.querySelector('#cookie-gold'), this.x, this.y + 30, 30, 30)
         return;
       }
-      
+
       if (Object.keys(this.cookiesRaised).length > 0) {
 
         if (this.leftHand?.type) {
-          this.ctx.drawImage(document.querySelector(`#cookie-${this.leftHand?.type}`), this.x -5, this.y + 40, 25, 25)
+          this.ctx.drawImage(document.querySelector(`#cookie-${this.leftHand?.type}`), this.x - 5, this.y + 40, 25, 25)
         }
-        
-        this.ctx.drawImage(this.cookBG, this.positions[this.direction].startX + this.w * this.positions[this.direction].current, this.positions[this.direction].startY, this.w, this.h, this.x, this.y, this.w, this.h)
+
+        this.ctx.drawImage(this.cookBG, this.positions[this.direction].startX + 60 * this.positions[this.direction].current, this.positions[this.direction].startY, 60, 90, this.x, this.y, this.w, this.h);
 
         if (this.rightHand?.type) {
           this.ctx.drawImage(document.querySelector(`#cookie-${this.rightHand?.type}`), this.x + 15, this.y + 40, 25, 25)
         }
         return;
       }
-      
-      this.ctx.drawImage(this.cookBG, this.positions[this.direction].startX + this.w * this.positions[this.direction].current, this.positions[this.direction].startY, this.w, this.h, this.x, this.y, this.w, this.h)
+
+      this.ctx.drawImage(this.cookBG, this.positions[this.direction].startX + 60 * this.positions[this.direction].current, this.positions[this.direction].startY, 60, 90, this.x, this.y, this.w, this.h);
       return;
     }
-    
-    if (this.direction === 'right') {      
+
+    if (this.direction === 'right') {
 
       if (this.boosters?.gold) {
         this.ctx.drawImage(document.querySelector('#cookie-gold'), this.x, this.y + 30, 30, 30)
         return;
       }
-      
+
       if (Object.keys(this.cookiesRaised).length > 0) {
 
         if (this.leftHand?.type) {
           this.ctx.drawImage(document.querySelector(`#cookie-${this.leftHand?.type}`), this.x + this.w - 20, this.y + 40, 25, 25)
         }
-        
-        this.ctx.drawImage(this.cookBG, this.positions[this.direction].startX + this.w * this.positions[this.direction].current, this.positions[this.direction].startY, this.w, this.h, this.x, this.y, this.w, this.h)
+
+        this.ctx.drawImage(this.cookBG, this.positions[this.direction].startX + 60 * this.positions[this.direction].current, this.positions[this.direction].startY, 60, 90, this.x, this.y, this.w, this.h);
 
         if (this.rightHand?.type) {
           this.ctx.drawImage(document.querySelector(`#cookie-${this.rightHand?.type}`), this.x + 15, this.y + 40, 25, 25)
         }
         return;
       }
-      
-      this.ctx.drawImage(this.cookBG, this.positions[this.direction].startX + this.w * this.positions[this.direction].current, this.positions[this.direction].startY, this.w, this.h, this.x, this.y, this.w, this.h)
+
+      this.ctx.drawImage(this.cookBG, this.positions[this.direction].startX + 60 * this.positions[this.direction].current, this.positions[this.direction].startY, 60, 90, this.x, this.y, this.w, this.h);
       return;
     }
 
 
     if (this.boosters?.gold) {
       this.ctx.drawImage(document.querySelector('#cookie-gold'), this.x + 35, this.y + 30, 30, 30)
-      this.ctx.drawImage(this.cookBG, this.positions[this.direction].startX + this.w * this.positions[this.direction].current, this.positions[this.direction].startY, this.w, this.h, this.x, this.y, this.w, this.h)
+      this.ctx.drawImage(this.cookBG, this.positions[this.direction].startX + 60 * this.positions[this.direction].current, this.positions[this.direction].startY, 60, 90, this.x, this.y, this.w, this.h);
       return;
     }
 
@@ -117,7 +118,7 @@ export default class Hero {
 
     }
 
-    this.ctx.drawImage(this.cookBG, this.positions[this.direction].startX + this.w * this.positions[this.direction].current, this.positions[this.direction].startY, this.w, this.h, this.x, this.y, this.w, this.h)
+    this.ctx.drawImage(this.cookBG, this.positions[this.direction].startX + 60 * this.positions[this.direction].current, this.positions[this.direction].startY, 60, 90, this.x, this.y, this.w, this.h);
 
   }
 
@@ -200,7 +201,7 @@ export default class Hero {
       this.positions[this.direction].current = 0;
       return;
     }
-    
+
     if (impuls.x === 0 && impuls.y === 0) {
       this.positions[this.direction].current = 0;
       return;
@@ -243,7 +244,7 @@ export default class Hero {
       }
       return;
     }
-    
+
   }
 
   moveCheched(impuls) {

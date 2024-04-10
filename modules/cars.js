@@ -3,7 +3,6 @@ import Car from "./car.js";
 export default class Cars {
 
   constructor(ctx, config, canvas) {
-    console.log(canvas)
     this.canvas = canvas;
     this.ctx = ctx;
     this.config = config;

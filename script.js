@@ -8,6 +8,12 @@ document.querySelector('#restart').addEventListener('click', () => {
   location.reload()
 })
 
+
+// let cooker = document.querySelector('#cook-man');
+// console.log(cooker)
+// cooker.style.height = window.innerHeight * 0.36 + 'px';
+// cooker.style.width = window.innerHeight * 0.42 + 'px';
+
 class Game {
   constructor() {
     this.canvas = document.querySelector('.canvas');
