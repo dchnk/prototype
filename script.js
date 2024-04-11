@@ -133,7 +133,7 @@ class Game {
         this.timerNode.textContent = this.time / 1000;
       }
 
-      if (this.time === 60000) {
+      if (this.time === 119000) {
         this.cookies.spawnCookie('gold');
       }
 
