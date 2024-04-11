@@ -32,18 +32,18 @@ export default class Hero {
       this.ctx.drawImage(this.cookBG, this.positions[this.direction].startX + 60 * this.positions[this.direction].current, this.positions[this.direction].startY, 60, 90, this.x, this.y, this.w, this.h);
 
       if (this.boosters?.gold) {
-        this.ctx.drawImage(document.querySelector('#cookie-gold'), this.x, this.y + 30, 30, 30)
+        this.ctx.drawImage(document.querySelector('#cookie-gold'), this.x, this.y + this.canvas.height * 0.03, this.canvas.height * 0.03, this.canvas.height * 0.03)
         return;
       }
 
       if (Object.keys(this.cookiesRaised).length > 0) {
 
         if (this.leftHand?.type) {
-          this.ctx.drawImage(document.querySelector(`#cookie-${this.leftHand?.type}`), this.x + this.w - 20, this.y + 40, 25, 25)
+          this.ctx.drawImage(document.querySelector(`#cookie-${this.leftHand?.type}`), this.x + this.w - this.canvas.height * 0.02, this.y + this.canvas.height * 0.04, this.canvas.height * 0.025, this.canvas.height * 0.025)
         }
 
         if (this.rightHand?.type) {
-          this.ctx.drawImage(document.querySelector(`#cookie-${this.rightHand?.type}`), this.x - 5, this.y + 40, 25, 25)
+          this.ctx.drawImage(document.querySelector(`#cookie-${this.rightHand?.type}`), this.x - this.canvas.height * 0.005, this.y + this.canvas.height * 0.04, this.canvas.height * 0.025, this.canvas.height * 0.025)
         }
 
       }
@@ -52,20 +52,20 @@ export default class Hero {
 
     if (this.direction === 'left') {
       if (this.boosters?.gold) {
-        this.ctx.drawImage(document.querySelector('#cookie-gold'), this.x, this.y + 30, 30, 30)
+        this.ctx.drawImage(document.querySelector('#cookie-gold'), this.x, this.y + this.canvas.height * 0.03, this.canvas.height * 0.03, this.canvas.height * 0.03)
         return;
       }
 
       if (Object.keys(this.cookiesRaised).length > 0) {
 
         if (this.leftHand?.type) {
-          this.ctx.drawImage(document.querySelector(`#cookie-${this.leftHand?.type}`), this.x - 5, this.y + 40, 25, 25)
+          this.ctx.drawImage(document.querySelector(`#cookie-${this.leftHand?.type}`), this.x - this.canvas.height * 0.005, this.y + this.canvas.height * 0.04, this.canvas.height * 0.025, this.canvas.height * 0.025)
         }
 
         this.ctx.drawImage(this.cookBG, this.positions[this.direction].startX + 60 * this.positions[this.direction].current, this.positions[this.direction].startY, 60, 90, this.x, this.y, this.w, this.h);
 
         if (this.rightHand?.type) {
-          this.ctx.drawImage(document.querySelector(`#cookie-${this.rightHand?.type}`), this.x + 15, this.y + 40, 25, 25)
+          this.ctx.drawImage(document.querySelector(`#cookie-${this.rightHand?.type}`), this.x + this.canvas.height * 0.015, this.y + this.canvas.height * 0.04, this.canvas.height * 0.025, this.canvas.height * 0.025)
         }
         return;
       }
@@ -77,7 +77,7 @@ export default class Hero {
     if (this.direction === 'right') {
 
       if (this.boosters?.gold) {
-        this.ctx.drawImage(document.querySelector('#cookie-gold'), this.x, this.y + 30, 30, 30)
+        this.ctx.drawImage(document.querySelector('#cookie-gold'), this.x, this.y + this.canvas.height * 0.03, this.canvas.height * 0.03, this.canvas.height * 0.03)
         return;
       }
 
@@ -101,7 +101,7 @@ export default class Hero {
 
 
     if (this.boosters?.gold) {
-      this.ctx.drawImage(document.querySelector('#cookie-gold'), this.x + 35, this.y + 30, 30, 30)
+      this.ctx.drawImage(document.querySelector('#cookie-gold'), this.x + this.canvas.height * 0.035, this.y + this.canvas.height * 0.03, this.canvas.height * 0.03, this.canvas.height * 0.03)
       this.ctx.drawImage(this.cookBG, this.positions[this.direction].startX + 60 * this.positions[this.direction].current, this.positions[this.direction].startY, 60, 90, this.x, this.y, this.w, this.h);
       return;
     }
@@ -251,8 +251,8 @@ export default class Hero {
     let x = this.x + impuls.x * this.speed;
     let y = this.y - impuls.y * this.speed;
 
-    if (x < 170 || x > 767) {
-      if (y < 110 || y > 740) {
+    if (x < this.canvas.height * 0.17 || x > this.canvas.height * 0.767) {
+      if (y < this.canvas.height * 0.11 || y > this.canvas.height * 0.74) {
         return;
       }
 
@@ -261,9 +261,9 @@ export default class Hero {
     }
 
 
-    if (y < 110 || y > 740) {
+    if (y < this.canvas.height * 0.11 || y > this.canvas.height * 0.74) {
 
-      if (x < 170 || x > 767) {
+      if (x < this.canvas.height * 0.17 || x > this.canvas.height * 0.767) {
         return;
       }
 
