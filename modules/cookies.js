@@ -3,7 +3,8 @@ import GoldCookie from "./cookies/gold-cookie.js";
 
 
 export default class Cookies {
-  constructor(ctx, config) {
+  constructor(ctx, config, canvas) {
+    this.canvas = canvas;
     this.ctx = ctx;
     this.config = config;
     this.cookies = {};
@@ -23,14 +24,14 @@ export default class Cookies {
     }
 
     if (type === 'gold') {
-      const gold = new GoldCookie();
+      const gold = new GoldCookie(this.canvas);
       this.cookies[gold.id] = gold;
       return;
     }
 
     let randomType = Math.round(getRandomArbitrary(1, this.types));
 
-    const cookie = new Cookie(x ? x : null, y ? y : null, type ? type : randomType, this.config.lifeTime, droped);
+    const cookie = new Cookie(this.canvas, x ? x : null, y ? y : null, type ? type : randomType, this.config.lifeTime, droped);
     if (!this.levels[cookie.type]) this.levels[cookie.type] = 0;
     
     this.levels[cookie.type] += 1;

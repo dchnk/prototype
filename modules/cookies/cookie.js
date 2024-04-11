@@ -1,10 +1,11 @@
 export default class Cookie {
-  constructor(x = null, y = null, type, lifeTime, droped = null) {
+  constructor(canvas, x = null, y = null, type, lifeTime, droped = null) {
+    this.canvas = canvas;
     this.id = null;
     this.droped = droped;
     this.hidding = false;
-    this.w = 30;
-    this.h = 30;
+    this.w = this.canvas.height * 0.03;
+    this.h = this.canvas.height * 0.03;
     this.x = x;
     this.y = y;
     this.type = type;
@@ -21,11 +22,11 @@ export default class Cookie {
 
     if (this.x && this.y) {
       const y = this.y;
-      const x = Math.round(getRandomArbitrary(this.x - 10, this.x + 5));
+      const x = Math.round(getRandomArbitrary(this.x - this.canvas.height * 0.01, this.x + this.canvas.height * 0.005));
       return { x, y };
     }
-    const y = Math.round(getRandomArbitrary(175, 762));
-    const x = Math.round(getRandomArbitrary(175, 785));
+    const y = Math.round(getRandomArbitrary(this.canvas.height * 0.175, this.canvas.height * 0.762));
+    const x = Math.round(getRandomArbitrary(this.canvas.height * 0.175, this.canvas.height * 0.785));
 
     return { x, y };
   }
