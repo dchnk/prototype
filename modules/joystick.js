@@ -36,6 +36,60 @@ export default class Joystick {
 
     this.nodes.stick.style.top = this.stick.y + 'px';
     this.nodes.stick.style.left = this.stick.x + 'px';
+    
+    document.addEventListener('touchmove', (e) => {
+      if (!this.active) return;
+      this.m.x = e.touches[0].clientX - this.start.x;
+      this.m.y = e.touches[0].clientY - this.start.y;
+
+      let mag = Math.sqrt(this.m.x * this.m.x + this.m.y * this.m.y);
+      if (mag >= this.r) {
+
+        this.stick.x = this.x + (this.m.x - this.x) / mag * this.r + this.stick.cx;
+        this.stick.y = this.y + (this.m.y - this.y) / mag * this.r + this.stick.cy;
+
+        this.impuls.x = (this.stick.cx - this.stick.x) * -1 / this.r;
+        this.impuls.y = (this.stick.cy - this.stick.y) / this.r;
+
+
+        this.nodes.stick.style.top = this.stick.y + 'px';
+        this.nodes.stick.style.left = this.stick.x + 'px';
+        return;
+      }
+
+
+      this.stick.x = this.stick.cx + this.m.x;
+      this.stick.y = this.stick.cy + this.m.y;
+
+
+      this.impuls.x = (this.stick.cx - this.stick.x) * -1 / this.r;
+      this.impuls.y = (this.stick.cy - this.stick.y) / this.r;
+
+
+      this.nodes.stick.style.top = this.stick.y + 'px';
+      this.nodes.stick.style.left = this.stick.x + 'px';
+    })
+
+    this.nodes.stick.addEventListener('touchstart', (e) => {
+    console.log(e)
+
+      this.start.x = e.touches[0].clientX;
+      this.start.y = e.touches[0].clientY;
+      this.active = true;      
+    })
+
+    document.addEventListener('touchend', (e) => {
+      this.stick.x = 25;
+      this.stick.y = 25;
+
+      this.nodes.stick.style.top = this.stick.y + 'px';
+      this.nodes.stick.style.left = this.stick.x + 'px';
+
+      this.impuls.x = 0;
+      this.impuls.y = 0;
+
+      this.active = false;
+    })
 
     document.addEventListener('mousemove', (e) => {
       if (!this.active) return;
